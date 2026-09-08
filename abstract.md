@@ -5,7 +5,7 @@ Abstracts may include up to two tables or figures combined (e.g.  1 figure and 1
 ## The Cignetti and the Noise: 
 
 ### Introduction
-Hiring of a Division I football coach is among the most consequential decisions an Athletic Director and a University can make.   Using data  on 103 recent P4 college football hires, we built a statistical model for predicting a coach’s success at their new school.   For each hire, we collected data about their background and experiences, the previous success as a head coach or coordinator and their success since hiring.  Over 50 variables on these factors were recorded though we used 29 of these in building our predictive model.     
+Hiring of a Division I football coach is among the most consequential decisions an Athletic Director and a University can make.   Using data  on 103 (ZZZ) recent P4 college football hires, we built a statistical model for predicting a coach’s success at their new school.   For each hire, we collected data about their background and experiences, the previous success as a head coach or coordinator and their success since hiring.  Over 50 variables on these factors were recorded though we used 29 of these in building our predictive model.     
  
 ### Methods
 Our measure of success is based upon Bill Connelly’s SP+ team ratings relative to the performance on the same metric of the school in the 15 year prior to their selection as head coach.  Using a cross-validated regularized linear regression, we obtain a predictive model for coaching success.
