@@ -11,7 +11,11 @@ author:
     affiliation:
       - name: UNC Charlotte
         title: Data Science Undergraduate
-date: "2025-11-20"
+date: last-modified
+citation:
+  container-title: Statistics and Data Science in Sports
+number-sections: true
+bibliography: sports.bib
 keywords:
   - sports analytics
   - college football
@@ -30,11 +34,7 @@ While we do find these factors are important for the prediction of a successful 
 With 66% accuracy, the model does identify coaching hires that will outperform team performance in the 15 years before the hire. 
 However, no combination of these factors leads to high predictability of identifying a successful coaching hire. 
 All of the data and code for this paper are available in a Github repository. |
-date: last-modified
-citation:
-  container-title: Statistics and Data Science in Sports
-number-sections: true
-bibliography: sports.bib
+
 ---
 
 # Introduction
