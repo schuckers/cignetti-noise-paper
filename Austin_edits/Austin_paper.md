@@ -283,23 +283,30 @@ about this analysis.
 [1] Connelly, B.: Explaining S&P+, college football’s deepest advanced analytics system. https:
 //www.sbnation.com/college-football/2017/10/13/16457830/college-football-advan
 ced-stats-analytics-rankings (2017). Accessed: 2025-11-05
+
 [2] Connelly, B.: 2025 college football SP+ rankings for all 136 fbs teams. https://www.espn.c
 om/college-football/story/_/id/46128861/2025-college-football-sp+-rankings-all
 -136-fbs-teams (2025). Accessed: 2025-11-05
+
 [3] Evans, D.: Complete list of the highest-paid state employees: College coaches dominate top
 earning public sector workers. https://thesportsdaily.org/news/complete-list-of-the
 -highest-paid-state-employees-college-coaches-dominate-top-earning-public-sec
 tor-workers/ (2023). Accessed: 2025-11-15
+
 [4] Friedman, J., Hastie, T., Tibshirani, R.: Regularization paths for generalized linear models via
 coordinate descent. Journal of Statistical Software 33(1), 1–22 (2010). DOI 10.18637/jss.v033.
 i01
+
 [5] Gilani, S., Easwaran, A., Lee, J., Hess, E.: cfbfastr: The sportsdataverse’s r package for college
 football data. (2021). URL https://cfbfastR.sportsdataverse.org/
+
 [6] Ozanian, M.: What the top 75 college sports programs are worth. https://www.cnbc.com/2
 024/12/19/college-sports-programs-valuations.html (2024). Accessed: 2025-11-16
+
 [7] Planos, J.: It doesn’t hurt to hire alumni as head coaches. but it doesn’t help, either. https:
 //fivethirtyeight.com/features/it-doesnt-hurt-to-hire-alumni-as-head-coaches-b
 ut-it-doesnt-help-either/ (2019). Accessed: 2025-11-07
+
 [8] Radjewski, B.: Talking tech: Creating a simple rating system. https://blog.collegefootba
 lldata.com/talking-tech-bu/ (2020). Accessed: 2025-11-05
 
