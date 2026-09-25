@@ -60,21 +60,21 @@ Specifically, we include P4 coaching hires who started coaching between 2016 and
 For each hire in our data, we recorded over 50 measurements though we used 29 as predictors below[cite: 1]. Generally these fall into three categories: background variables, previous coaching performance, and performance metrics in the job for which they were hired. Included in the background variables are information about their coaching career, their previous coaching positions, whether or not they have previously coached in the NFL, whether or not they had previously been a HC, whether they had played or coached previously at the hiring institution, etc. Previous coaching performance variables are recorded and include previous performance as a college head coach. Variables on a coaches background included features such as whether or not they had a previous connection to the hiring school, whether they played P4 football, and whether they had coached in the NFL. A full list of all variables is presented in @tbl-var of the Appendix. One of the metrics we considered was having a connection to the hiring school by being an alumni or having played there or having coached there. Having an alumni as your head coach was previously analyzed by Josh Planos of FiveThirtyEight and found to not impact coaching success either way [@alumni_538]. To account for regression to the mean, a team that was underperforming relative to historical averages before a coach arrived, we also included the team's average performance for the five years before the hired coach arrived.
 
 ::: {#fig-cat1 layout-ncol=2}
-![Regional Ties](img/cfb_sp_vs_RegionalTies.png){#fig-reg-ties}
+![Regional Ties](images/cfb_sp_vs_RegionalTies.png){#fig-reg-ties}
 
-![Prior Connection to School](img/cfb_sp_vs_Connection.png){#fig-connection}
+![Prior Connection to School](images/cfb_sp_vs_Connection.png){#fig-connection}
 
-![Previously won Conf. Champ. as HC](img/cfb_sp_vs_PrevCCasHC.png){#fig-prev-cc}
+![Previously won Conf. Champ. as HC](images/cfb_sp_vs_PrevCCasHC.png){#fig-prev-cc}
 
-![Previously won Natl. Champ. as Coordinator](img/cfb_sp_vs_PrevNCasCoord.png.png){#fig-prev-nc}
+![Previously won Natl. Champ. as Coordinator](images/cfb_sp_vs_PrevNCasCoord.png.png){#fig-prev-nc}
 
-![Previous Job with P4 School](img/cfb_sp_vs_LeavingP4.png){#fig-p4}
+![Previous Job with P4 School](images/cfb_sp_vs_LeavingP4.png){#fig-p4}
 
-![Previous Job with NFL](img/cfb_sp_vs_LeavingNFL.png){#fig-nfl}
+![Previous Job with NFL](images/cfb_sp_vs_LeavingNFL.png){#fig-nfl}
 
-![Previous Job as OC](img/cfb_sp_vs_LastOC.png){#fig-oc}
+![Previous Job as OC](images/cfb_sp_vs_LastOC.png){#fig-oc}
 
-![Previously been HC any level college](img/cfb_sp_vs_PrevHCAny.png){#fig-hc-any}
+![Previously been HC any level college](images/cfb_sp_vs_PrevHCAny.png){#fig-hc-any}
 
 Plots for selected categorical predictors vs SP Rel[cite: 1]
 :::
@@ -111,13 +111,13 @@ The majority of hired coaches, 65, had not worked for, played at or attended the
 Below when we refer to recent metrics we will be talking about a five year period and when we refer to previous metrics we will be talking about a 15 year period.
 
 ::: {#fig-numeric1 layout-ncol=2}
-![Numb. years as Coord or HC](img/cfb_sp_vs_numb_yrs_Coord_HC_quad.png){#fig-yrs-coord}
+![Numb. years as Coord or HC](images/cfb_sp_vs_numb_yrs_Coord_HC_quad.png){#fig-yrs-coord}
 
-![Age - 50](img/cfb_sp_vs_Age.png){#fig-age}
+![Age - 50](images/cfb_sp_vs_Age.png){#fig-age}
 
-![Teams SP+ in last 5 years](img/cfb_sp_vs_TeamSPRecent.png){#fig-sp-recent}
+![Teams SP+ in last 5 years](images/cfb_sp_vs_TeamSPRecent.png){#fig-sp-recent}
 
-![Teams SP+ in last 15 years](img/cfb_sp_vs_TeamSP_Prev15.png){#fig-sp-prev15}
+![Teams SP+ in last 15 years](images/cfb_sp_vs_TeamSP_Prev15.png){#fig-sp-prev15}
 
 Plots for selected numeric predictors vs SP Rel
 :::
@@ -239,45 +239,45 @@ Thanks to the team of folks who put together `cfbfastr` for making their data av
 : List of variables used as predictors in this paper. All values are relative to the coach at the time they were hired. {#tbl-var}
 
 ::: {#fig-append-cat layout-ncol=2}
-![Previous job as DC](img/cfb_sp_vs_LastDC.png){#fig-last-dc}
+![Previous job as DC](images/cfb_sp_vs_LastDC.png){#fig-last-dc}
 
-![Previous job as HC](img/cfb_sp_vs_PreviousHC.png){#fig-prev-hc}
+![Previous job as HC](images/cfb_sp_vs_PreviousHC.png){#fig-prev-hc}
 
-![Played P4 football](img/cfb_sp_vs_PlayedP4.png){#fig-played-p4}
+![Played P4 football](images/cfb_sp_vs_PlayedP4.png){#fig-played-p4}
 
-![Played in the NFL](img/cfb_sp_vs_PlayedNFL.png){#fig-played-nfl}
+![Played in the NFL](images/cfb_sp_vs_PlayedNFL.png){#fig-played-nfl}
 
-![Side of the Ball](img/cfb_sp_vs_SideOfBall.png){#fig-side-ball}
+![Side of the Ball](images/cfb_sp_vs_SideOfBall.png){#fig-side-ball}
 
-![Promoted from Within](img/cfb_sp_vs_PromoteWithin.png){#fig-promote-within}
+![Promoted from Within](images/cfb_sp_vs_PromoteWithin.png){#fig-promote-within}
 
 Additional plots of categorical predictors vs *SP+ Rel*
 :::
 
 ::: {#fig-append-cat2 layout-ncol=2}
-![Has NFL coaching experience](img/cfb_sp_vs_PrevNFLCoaching.png){#fig-nfl-exp}
+![Has NFL coaching experience](images/cfb_sp_vs_PrevNFLCoaching.png){#fig-nfl-exp}
 
-![Won Natl. Champ. as HC any level](img/cfb_sp_vs_WonNCasHCAny.png){#fig-nc-hc}
+![Won Natl. Champ. as HC any level](images/cfb_sp_vs_WonNCasHCAny.png){#fig-nc-hc}
 
-![Won Conf. Champ. as Coord any level](img/cfb_sp_vs_WonCCasCoordAny.png){#fig-cc-coord}
+![Won Conf. Champ. as Coord any level](images/cfb_sp_vs_WonCCasCoordAny.png){#fig-cc-coord}
 
-![Hired within same conference](img/cfb_sp_vs_SameConf.png){#fig-same-conf}
+![Hired within same conference](images/cfb_sp_vs_SameConf.png){#fig-same-conf}
 
-![Been Recruiting Coordinator previously](img/cfb_sp_vs_PrevRecruitCoord.png){#fig-recruit-coord}
+![Been Recruiting Coordinator previously](images/cfb_sp_vs_PrevRecruitCoord.png){#fig-recruit-coord}
 
 Additional plots of categorical predictors vs *SP+ Rel*
 :::
 
 ::: {#fig-append-numeric layout-ncol=2}
-![All Past Win Pct as HC](img/cfb_sp_vs_AllPastWinPctAsHC.png){#fig-all-winpct}
+![All Past Win Pct as HC](images/cfb_sp_vs_AllPastWinPctAsHC.png){#fig-all-winpct}
 
-![Win Pct at Previous job if HC](img/cfb_sp_vs_Coach_PrevWinPct.png){#fig-prev-winpct}
+![Win Pct at Previous job if HC](images/cfb_sp_vs_Coach_PrevWinPct.png){#fig-prev-winpct}
 
-![Coach *SP+ Rel* before hire](img/cfb_sp_vs_Coach_sp_rel_before.png){#fig-coach-sp-before}
+![Coach *SP+ Rel* before hire](images/cfb_sp_vs_Coach_sp_rel_before.png){#fig-coach-sp-before}
 
-![Numb. of games as HC](img/cfb_sp_vs_numb_gamesAsHC.png){#fig-games-hc}
+![Numb. of games as HC](images/cfb_sp_vs_numb_gamesAsHC.png){#fig-games-hc}
 
-![Team Win Pct in last 5 years](img/cfb_sp_vs_TeamWinPctRecent.png){#fig-team-winpct-recent}
+![Team Win Pct in last 5 years](images/cfb_sp_vs_TeamWinPctRecent.png){#fig-team-winpct-recent}
 
 Additional plots comparing numeric predictors and *SP+ Rel*
 :::
