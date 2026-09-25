@@ -14,7 +14,7 @@ We consider two measures of coaching success; each is based upon Bill Connellyâ€
 Among the important factors for predicting a successful hire are having been a previous college head coach, leaving a job as an Offensive Coordinator, age and quality of the hiring school's team in the previous 15 years. While we do find these factors to be important for the prediction of a successful coaching hire, the trends are weak. With 66% accuracy, the model identifies coaching hires that will outperform team performance in the 15 years before the hire.  Unsurprisingly, Curt Cignetti's performance as the coach at Indiana is an outlier.
 
 ### Conclusion
- However, no combination of these factors leads to high predictability of identifying a successful coaching hire. 
+ However, no combination of these factors leads to high predictability of identifying a successful coaching hire. Hiring a coach is hard; hiring a really successful coach is unlikely at best.
 
 
 ### To Do
