@@ -13,7 +13,16 @@ author:
         title: Data Science Undergraduate
 date: "2025-11-20"
 abstract: |
-  Using data on 103 recent P4 college football hires, we built a statistical model for predicting a coach’s success at their new school. For each hire, we collected data about their background and experiences, the previous success as a head coach or coordinator and their success since hiring. Over 50 variables on these factors were recorded though we used 29 of these in building our predictive model. Our measure of success is based upon Bill Connelly’s SP+ team ratings relative to the performance on the same metric of the school in the 15 year prior to their selection as head coach. Using a cross-validated regularized linear regression, we obtain a predictive model for coaching success. Among the important factors for predicting a successful hire are having been a previous college head coach, leaving a job as an Offensive Coordinator, age and quality of the hiring school's team in the previous 15 years. While we do find these factors are important for the prediction of a successful coaching hire, the trends here are weak. With 66% accuracy, the model does identify coaching hires that will outperform team performance in the 15 years before the hire. However, no combination of these factors leads to high predictability of identifying a successful coaching hire[cite: 1]. All of the data and code for this paper are available in a Github repository.
+  Using data on 103 recent P4 college football hires, we built a statistical model for predicting a coach’s success at their new school. 
+For each hire, we collected data about their background and experiences, the previous success as a head coach or coordinator and their success since hiring. 
+Over 50 variables on these factors were recorded though we used 29 of these in building our predictive model. 
+Our measure of success is based upon Bill Connelly’s SP+ team ratings relative to the performance on the same metric of the school in the 15 year prior to their selection as head coach. 
+Using a cross-validated regularized linear regression, we obtain a predictive model for coaching success. 
+Among the important factors for predicting a successful hire are having been a previous college head coach, leaving a job as an Offensive Coordinator, age and quality of the hiring school's team in the previous 15 years. 
+While we do find these factors are important for the prediction of a successful coaching hire, the trends here are weak. 
+With 66% accuracy, the model does identify coaching hires that will outperform team performance in the 15 years before the hire. 
+However, no combination of these factors leads to high predictability of identifying a successful coaching hire. 
+All of the data and code for this paper are available in a Github repository.
 keywords:
   - sports analytics
   - college football
@@ -31,9 +40,14 @@ bibliography: sports.bib
 
 # Introduction
 
-College football is big business. The changes due to the use of player's name, image and license (NIL) that allow players to be openly (and appropriately) paid for their services, has brought a new influx of funds. A December 2024 study by CNBC using fiscal year 2023 numbers estimated that the top university athletic programs are valued at over $1 billion US dollars and have annual revenue of over $200 million [@cnbc_college_worth]. Unsurprisingly the executive that leads the college football operation, the head coach, are well compensated. In a 2023 study, David Evans found that "80% of the Highest-Earning Public Employees are College Head Coaches" [@highest_state].
+College football is big business. The changes due to the use of player's name, image and license (NIL) that allow players to be openly (and appropriately) paid for their services, has brought a new influx of funds. 
+A December 2024 study by CNBC using fiscal year 2023 numbers estimated that the top university athletic programs are valued at over $1 billion US dollars and have annual revenue of over $200 million [@cnbc_college_worth]. 
+Unsurprisingly the executive that leads the college football operation, the head coach, are well compensated. In a 2023 study, David Evans found that "80% of the Highest-Earning Public Employees are College Head Coaches" [@highest_state].
 
-Being a successful college football head coach requires multifaceted talent in player development, in gameday decision making, in player evaluation and in recruitment of players. Consequently, the selection of a new coach for top universities is an important one. The analysis develops a machine learning predictive model which finds that there are a handful of factors that predict a coaching hire's success. However, it is clear that our model's predictions are far from certain and that there is a great deal of noise relative to the signals in the data about who would make a successful coach.
+Being a successful college football head coach requires multifaceted talent in a variety of areas including player development, staff management, in gameday decision making, in player evaluation and in recruitment of players. 
+Consequently, the selection of a new coach for top universities is an important one. 
+The analysis develops a machine learning predictive model which finds that there are a handful of factors that predict a coaching hire's success. 
+However, it is clear that our model's predictions are far from certain and that there is a great deal of noise relative to the signals in the data about who would make a successful coach.
 
 In the rest of this paper we look at past hiring of college football head coaches to build a predictive model of the characteristics and factors that influence their success. The next Section introduces the data that we collected through both automated and manual means. Summaries of the variables we used as predictors are given in Section 3. We describe our model building process and results in Section 4. Finally, we conclude with a discussion of our results.
 
