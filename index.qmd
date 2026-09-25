@@ -12,6 +12,13 @@ author:
       - name: UNC Charlotte
         title: Data Science Undergraduate
 date: "2025-11-20"
+keywords:
+  - sports analytics
+  - college football
+  - regularization
+  - predictive modelling
+  - machine learning
+  - coaching
 abstract: |
   Using data on 103 recent P4 college football hires, we built a statistical model for predicting a coach’s success at their new school. 
 For each hire, we collected data about their background and experiences, the previous success as a head coach or coordinator and their success since hiring. 
@@ -22,14 +29,7 @@ Among the important factors for predicting a successful hire are having been a p
 While we do find these factors are important for the prediction of a successful coaching hire, the trends here are weak. 
 With 66% accuracy, the model does identify coaching hires that will outperform team performance in the 15 years before the hire. 
 However, no combination of these factors leads to high predictability of identifying a successful coaching hire. 
-All of the data and code for this paper are available in a Github repository.
-keywords:
-  - sports analytics
-  - college football
-  - regularization
-  - predictive modelling
-  - machine learning
-  - coaching
+All of the data and code for this paper are available in a Github repository. |
 date: last-modified
 citation:
   container-title: Statistics and Data Science in Sports
