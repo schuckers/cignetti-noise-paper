@@ -30,11 +30,11 @@ keywords:
   - predictive modelling
   - machine learning
   - coaching
-format:
-  html:
-    toc: true
-    number-sections: true
-    code-fold: true
+date: last-modified
+bibliography: references.bib
+citation:
+  container-title: Statistics and Data Science in Sports
+number-sections: true
 bibliography: sports.bib
 ---
 
