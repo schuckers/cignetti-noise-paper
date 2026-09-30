@@ -1,6 +1,8 @@
 Abstracts must contain fewer than 500 words, including title and body.
 Abstracts may include up to two tables or figures combined (e.g.  1 figure and 1 table, or 2 tables). 
 
+Word count: 455
+
 ## Cignetti and The Noise
 
 
@@ -19,16 +21,3 @@ Among the important factors for predicting a successful hire are having been a p
 
 ### **Conclusion**
 No combination of these factors leads to high predictability of identifying a successful coaching hire. The data is noisy and presents mild patterns at best, indicating the many nuances of college football coaching. There are no magic coaching attributes that guarantee future success among the factors we investigated. Hiring a coach is hard; hiring a really successful coach is unlikely at best.
-
-**NOTE about Figures:**
-
-Use Figure 3 with just:
-- Previous job as hc
-- Previous job as dc
-- Side of the ball
-- Won Natl. Champ. as HC any level
-- Won Conf. Champ. as Coord any level
-- Has NFL coaching experience
-
-Use Figure 4:
-- Maybe add one more plot (if applicable and there is room).
