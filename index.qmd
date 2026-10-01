@@ -44,41 +44,72 @@ A December 2024 study by CNBC using fiscal year 2023 numbers estimated that the 
 Unsurprisingly the executive that leads the college football operation, the head coach, are well compensated. In a 2023 study, David Evans found that "80% of the Highest-Earning Public Employees are College Head Coaches" [@highest_state].
 
 Being a successful college football head coach requires multifaceted talent in a variety of areas including player development, staff management, in gameday decision making, in player evaluation and in recruitment of players. 
-Consequently, the selection of a new coach for top universities is an important one. 
-The analysis develops a machine learning predictive model which finds that there are a handful of factors that predict a coaching hire's success. 
+Consequently, the selection of a new coach for top universities is an important one.  This paper proposes two novel contributions.  First, we propose methodology for evaluating coaching hires by comparing coaching success
+to previous performance at a given institution.  
+Using those performance measures we build a model to predict which coaching hires will be successful using hand collected data about each coach's background, experiences, and previous success as a coach.
+We then develop a machine learning predictive model which finds that there are a few factors that discernibly predict a coaching hire's future performance. 
 However, it is clear that our model's predictions are far from certain and that there is a great deal of noise relative to the signals in the data about who would make a successful coach.
 
-In the rest of this paper we look at past hiring of college football head coaches to build a predictive model of the characteristics and factors that influence their success. The next Section introduces the data that we collected through both automated and manual means. Summaries of the variables we used as predictors are given in Section 3. We describe our model building process and results in Section 4. Finally, we conclude with a discussion of our results.
+In the rest of this paper we look at past hiring of college football head coaches to build a predictive model of the characteristics and factors that influence their success. 
+The next Section introduces the data that we collected through both automated and manual means. 
+Summaries of the variables we used as predictors are given in Section 3. 
+We describe our model building process and results in Section 4. 
+Finally, we conclude with a discussion of our results.
 
 # Data
 
-The data set used for this analysis is a collection of Power 4 plus Notre Dame (P4) coaching hires. The P4 conferences are the Atlantic Coast Conference (ACC), Big 12, Big Ten and Southeastern Conference (SEC). We began with all coaching hires who started coaching in 2016 or since. We added at least once coach from each school so that Kirk Ferentz is in our data. That gave us 120 hires.
+The data set used for this analysis is a collection of Power 4 plus Notre Dame (P4) coaching hires. 
+The P4 conferences are the Atlantic Coast Conference (ACC), Big 12, Big Ten and Southeastern Conference (SEC). 
+We began with all coaching hires who started coaching during the 2016 season or since. 
+We added at least once coach from each school so that Kirk Ferentz is in our data. That gave us 122 hires.
 
-Specifically, we include P4 coaching hires who started coaching between 2016 and 2023[cite: 1]. As our observational units, we chose hires rather than coaches since it is the outcome of the hiring process we are trying to maximize. Consequently, Kirk Ferentz, the current dean of college football, is in the data. Nick Saban is not among our data, but James Franklin is in the data, as the only Penn State coach over this time period. Matt Rhule appears two times because of being hired at Baylor (in 2017) and at Nebraska (in 2023). We did not include interim coaches and, of course, as the title implies Curt Cignetti is one of our observations and an outlier. In total there are 103 coaching hires in these data.
+Specifically, we include P4 coaching hires who started coaching between 2016 and 2024. 
+As our observational units, we chose hires rather than coaches, since it is the outcome of the hiring process we are trying to maximize. 
+Consequently, Kirk Ferentz, the current dean of college football, is in the data. Nick Saban is not among our data, but James Franklin is in the data, as the only Penn State coach over this time period. 
+Matt Rhule appears twice having been hired at Baylor (in 2017) and at Nebraska (in 2023). 
+We did not include interim coaches and, of course, as the title implies Curt Cignetti is one of our observations and an outlier. 
+In total there are 101 coaching hires in these data.
 
-For each hire in our data, we recorded over 50 measurements though we used 29 as predictors below[cite: 1]. Generally these fall into three categories: background variables, previous coaching performance, and performance metrics in the job for which they were hired. Included in the background variables are information about their coaching career, their previous coaching positions, whether or not they have previously coached in the NFL, whether or not they had previously been a HC, whether they had played or coached previously at the hiring institution, etc. Previous coaching performance variables are recorded and include previous performance as a college head coach. Variables on a coaches background included features such as whether or not they had a previous connection to the hiring school, whether they played P4 football, and whether they had coached in the NFL. A full list of all variables is presented in @tbl-var of the Appendix. One of the metrics we considered was having a connection to the hiring school by being an alumni or having played there or having coached there. Having an alumni as your head coach was previously analyzed by Josh Planos of FiveThirtyEight and found to not impact coaching success either way [@alumni_538]. To account for regression to the mean, a team that was underperforming relative to historical averages before a coach arrived, we also included the team's average performance for the five years before the hired coach arrived.
+For each hire in our data, we recorded over 50 measurements about their past history though we used 29 as predictors below. 
+Generally these fall into three categories: background variables, previous coaching performance, and performance metrics in the job for which they were hired. 
+Included in the background variables are information about their coaching career, their previous coaching positions, whether or not they have previously coached in the NFL, whether or not they had previously been a HC, whether they had played or coached previously at the hiring institution, etc. 
+Previous coaching performance variables are recorded and include previous performance as a college head coach. 
+Variables on a coaches background included features such as whether or not they had a previous connection to the hiring school, whether they played P4 football, and whether they had coached in the NFL. 
+A full list of all variables is presented in @tbl-var of the Appendix. 
+One of the metrics we considered was having a connection to the hiring school by being an alumni or having played there or having coached there. 
+Having an alumni as your head coach was previously analyzed by Josh Planos of FiveThirtyEight and found to not impact coaching success either way [@alumni_538].
+ZZZ need to add the more recent articles ZZZ.
+To account for regression to the mean, a team that was underperforming relative to historical averages before a coach arrived, we also included the team's average performance for the five years before the hired coach arrived.
 
 ::: {#fig-cat1 layout-ncol=2}
-![Regional Ties](images/cfb_sp_vs_RegionalTies.png){#fig-reg-ties}
+![Regional Ties](img/cfb_sp_vs_RegionalTies.png){#fig-reg-ties}
 
-![Prior Connection to School](images/cfb_sp_vs_Connection.png){#fig-connection}
+![Prior Connection to School](img/cfb_sp_vs_Connection.png){#fig-connection}
 
-![Previously won Conf. Champ. as HC](images/cfb_sp_vs_PrevCCasHC.png){#fig-prev-cc}
+![Previously won Conf. Champ. as HC](img/cfb_sp_vs_PrevCCasHC.png){#fig-prev-cc}
 
-![Previously won Natl. Champ. as Coordinator](images/cfb_sp_vs_PrevNCasCoord.png.png){#fig-prev-nc}
+![Previously won Natl. Champ. as Coordinator](img/cfb_sp_vs_PrevNCasCoord.png.png){#fig-prev-nc}
 
-![Previous Job with P4 School](images/cfb_sp_vs_LeavingP4.png){#fig-p4}
+![Previous Job with P4 School](img/cfb_sp_vs_LeavingP4.png){#fig-p4}
 
-![Previous Job with NFL](images/cfb_sp_vs_LeavingNFL.png){#fig-nfl}
+![Previous Job with NFL](img/cfb_sp_vs_LeavingNFL.png){#fig-nfl}
 
-![Previous Job as OC](images/cfb_sp_vs_LastOC.png){#fig-oc}
+![Previous Job as OC](img/cfb_sp_vs_LastOC.png){#fig-oc}
 
-![Previously been HC any level college](images/cfb_sp_vs_PrevHCAny.png){#fig-hc-any}
+![Previously been HC any level college](img/cfb_sp_vs_PrevHCAny.png){#fig-hc-any}
 
-Plots for selected categorical predictors vs SP Rel[cite: 1]
+Plots for selected categorical predictors vs SP Rel
 :::
 
-To determine how successful each coach was as a hire we calculated their performance as a HC relative to the historical performance of the university where they were hired. For performance we considered three measurements. First we considered a hire's win percentage since winning is arguably the most important outcome for a head coach. Second, we considered a coach's average Simple Rating System (SRS). This metric, SRS, is a "weighted scoring margin" where the weighted part is based upon the quality of the teams that have been played [@intro_srs]. Third, we considered a coaches average relative SP+ which is a predictive metric developed by Bill Connelly [@intro_sp] that is a "tempo- and opponent-adjusted measure" of team efficiency [@sp_2025]. The historical values for win percentage, SRS and SP+ were obtained using the `cfbfastr` package [@cfbfastr]. We augmented those data with wins and losses from the 2025 season.
+To determine how successful each coach was as a hire we calculated their performance as a HC relative to the historical performance of the university where they were hired. 
+For performance we considered three measurements. 
+First we considered a hire's win percentage since winning is arguably the most important outcome for a head coach. 
+Second, we considered a coach's average Simple Rating System (SRS). 
+This metric, SRS, is a "weighted scoring margin" where the weighted part is based upon the quality of the teams that have been played [@intro_srs]. 
+Third, we considered a coaches average relative SP+ which is a predictive metric developed by Bill Connelly [@intro_sp] that is a "tempo- and opponent-adjusted measure" of team efficiency [@sp_2025]. 
+The historical values for win percentage, SRS and SP+ were obtained using the `cfbfastr` package [@cfbfastr]. We augmented those data with wins and losses from the 2025 season.
+
+
 
 | Name | Hiring School | *SP+ Rel* |
 |:---|:---|---:|
@@ -93,7 +124,7 @@ To determine how successful each coach was as a hire we calculated their perform
 | Lane Kiffin | Ole Miss | 8.8 |
 | Josh Heupel | Tennessee | 8.7 |
 
-: Best Performing Coaching Hires by *SP+ Rel*. {#tbl-topcoaches}[cite: 1]
+: Best Performing Coaching Hires by *SP+ Rel*. {#tbl-topcoaches}
 
 One of the significant challenges for this type of analysis is to define success. This is certainly the case here, and in no small part is due to the expectations for each school. What might be a successful record at Arizona, might not be a success at Alabama. What gets a coach an extension in College Park, might be a reason to be fired in College Station or State College. Consequently, our definition of coaching performance is relative (to team history) rather than absolute.
 
@@ -103,20 +134,20 @@ Using the R package `cfbfastr`, we obtained historical team data including wins 
 
 # Data Summaries
 
-Among these 103 college football head coaching hires in our data, there were 50 who left a job as head coach (HC) at another school, and 63 of our hires had been a HC at some level previous to their being hired[cite: 1]. Twenty-eight of the hired coaches had been Defensive Coordinators (DCs) and 15 were Offensive Coordinators (OCs). The other previous positions included four position coaches, an offensive analyst, four Associate or Assistant HCs and one hire who was not employed in football. While more coaches were hired directly from DC positions, 40 of the 103 hires (39%) had defense as their background. Sixty-three of the hires had been a head coach at the college or NFL previously and in total only 24 had previously coached in the NFL. Thirty-one percent of the coaches were hired to jobs within the same conference. Only 16 of our hires were promoted from the coaching staff of the same institution including Dabo Swinney. The average age of our coaches when they were hired is approximately 46 years.
+Among these 103 college football head coaching hires in our data, there were 50 who left a job as head coach (HC) at another school, and 63 of our hires had been a HC at some level previous to their being hired. Twenty-eight of the hired coaches had been Defensive Coordinators (DCs) and 15 were Offensive Coordinators (OCs). The other previous positions included four position coaches, an offensive analyst, four Associate or Assistant HCs and one hire who was not employed in football. While more coaches were hired directly from DC positions, 40 of the 103 hires (39%) had defense as their background. Sixty-three of the hires had been a head coach at the college or NFL previously and in total only 24 had previously coached in the NFL. Thirty-one percent of the coaches were hired to jobs within the same conference. Only 16 of our hires were promoted from the coaching staff of the same institution including Dabo Swinney. The average age of our coaches when they were hired is approximately 46 years.
 
-The majority of hired coaches, 65, had not worked for, played at or attended the school that hired them[cite: 1]. While the vast majority of the hired coaches played college football, just under 50% of them, 49, played for a P4 school and only ten played in the NFL.
+The majority of hired coaches, 65, had not worked for, played at or attended the school that hired them. While the vast majority of the hired coaches played college football, just under 50% of them, 49, played for a P4 school and only ten played in the NFL.
 
 Below when we refer to recent metrics we will be talking about a five year period and when we refer to previous metrics we will be talking about a 15 year period.
 
 ::: {#fig-numeric1 layout-ncol=2}
-![Numb. years as Coord or HC](images/cfb_sp_vs_numb_yrs_Coord_HC_quad.png){#fig-yrs-coord}
+![Numb. years as Coord or HC](img/cfb_sp_vs_numb_yrs_Coord_HC_quad.png){#fig-yrs-coord}
 
-![Age - 50](images/cfb_sp_vs_Age.png){#fig-age}
+![Age - 50](img/cfb_sp_vs_Age.png){#fig-age}
 
-![Teams SP+ in last 5 years](images/cfb_sp_vs_TeamSPRecent.png){#fig-sp-recent}
+![Teams SP+ in last 5 years](img/cfb_sp_vs_TeamSPRecent.png){#fig-sp-recent}
 
-![Teams SP+ in last 15 years](images/cfb_sp_vs_TeamSP_Prev15.png){#fig-sp-prev15}
+![Teams SP+ in last 15 years](img/cfb_sp_vs_TeamSP_Prev15.png){#fig-sp-prev15}
 
 Plots for selected numeric predictors vs SP Rel
 :::
@@ -164,7 +195,7 @@ The hires with the ten highest and ten lowest predicted *SP+ Rel* are listed in 
 | Brent Venables | Oklahoma | -8.9 | -6.8 |
 | Ed Orgeron | LSU | -4.8 | -7.4 |
 
-: Top 10 & Bottom 10 Coaching Hires by Predicted *SP+ Rel*. {#tbl-topcoaches-pred}[cite: 1]
+: Top 10 & Bottom 10 Coaching Hires by Predicted *SP+ Rel*. {#tbl-topcoaches-pred}
 
 The model we have explains about $24\%$ of the variability in the team's performance with a newly hired coach and the average difference between our model's prediction and the actual *SP+ Rel* of the coaches in these data is just over $7$ points. In 2025 terms, that difference is akin to the average difference in weekly performance between Texas A&M and Missouri, or between USC and Nebraska or between Georgia Tech and NC State. That is a large amount of variability and it speaks to the noisiness of these data. However, the model does well given that noisiness at predicting who will have a *SP+ Rel* above or below zero achieving 66% accuracy on this metric.
 
@@ -201,7 +232,7 @@ Thanks to the team of folks who put together `cfbfastr` for making their data av
 | Ryan Walters | Purdue | -11.7 |
 | Mel Tucker | Michigan State | -11.5 |
 
-: Worst Performing Coaching Hires by *SP+ Rel*. {#tbl-bottomcoaches}[cite: 1]
+: Worst Performing Coaching Hires by *SP+ Rel*. {#tbl-bottomcoaches}
 
 | Variable Name | Variable Meaning |
 |:---|:---|
@@ -238,45 +269,45 @@ Thanks to the team of folks who put together `cfbfastr` for making their data av
 : List of variables used as predictors in this paper. All values are relative to the coach at the time they were hired. {#tbl-var}
 
 ::: {#fig-append-cat layout-ncol=2}
-![Previous job as DC](images/cfb_sp_vs_LastDC.png){#fig-last-dc}
+![Previous job as DC](img/cfb_sp_vs_LastDC.png){#fig-last-dc}
 
-![Previous job as HC](images/cfb_sp_vs_PreviousHC.png){#fig-prev-hc}
+![Previous job as HC](img/cfb_sp_vs_PreviousHC.png){#fig-prev-hc}
 
-![Played P4 football](images/cfb_sp_vs_PlayedP4.png){#fig-played-p4}
+![Played P4 football](img/cfb_sp_vs_PlayedP4.png){#fig-played-p4}
 
-![Played in the NFL](images/cfb_sp_vs_PlayedNFL.png){#fig-played-nfl}
+![Played in the NFL](img/cfb_sp_vs_PlayedNFL.png){#fig-played-nfl}
 
-![Side of the Ball](images/cfb_sp_vs_SideOfBall.png){#fig-side-ball}
+![Side of the Ball](img/cfb_sp_vs_SideOfBall.png){#fig-side-ball}
 
-![Promoted from Within](images/cfb_sp_vs_PromoteWithin.png){#fig-promote-within}
+![Promoted from Within](img/cfb_sp_vs_PromoteWithin.png){#fig-promote-within}
 
 Additional plots of categorical predictors vs *SP+ Rel*
 :::
 
 ::: {#fig-append-cat2 layout-ncol=2}
-![Has NFL coaching experience](images/cfb_sp_vs_PrevNFLCoaching.png){#fig-nfl-exp}
+![Has NFL coaching experience](img/cfb_sp_vs_PrevNFLCoaching.png){#fig-nfl-exp}
 
-![Won Natl. Champ. as HC any level](images/cfb_sp_vs_WonNCasHCAny.png){#fig-nc-hc}
+![Won Natl. Champ. as HC any level](img/cfb_sp_vs_WonNCasHCAny.png){#fig-nc-hc}
 
-![Won Conf. Champ. as Coord any level](images/cfb_sp_vs_WonCCasCoordAny.png){#fig-cc-coord}
+![Won Conf. Champ. as Coord any level](img/cfb_sp_vs_WonCCasCoordAny.png){#fig-cc-coord}
 
-![Hired within same conference](images/cfb_sp_vs_SameConf.png){#fig-same-conf}
+![Hired within same conference](img/cfb_sp_vs_SameConf.png){#fig-same-conf}
 
-![Been Recruiting Coordinator previously](images/cfb_sp_vs_PrevRecruitCoord.png){#fig-recruit-coord}
+![Been Recruiting Coordinator previously](img/cfb_sp_vs_PrevRecruitCoord.png){#fig-recruit-coord}
 
 Additional plots of categorical predictors vs *SP+ Rel*
 :::
 
 ::: {#fig-append-numeric layout-ncol=2}
-![All Past Win Pct as HC](images/cfb_sp_vs_AllPastWinPctAsHC.png){#fig-all-winpct}
+![All Past Win Pct as HC](img/cfb_sp_vs_AllPastWinPctAsHC.png){#fig-all-winpct}
 
-![Win Pct at Previous job if HC](images/cfb_sp_vs_Coach_PrevWinPct.png){#fig-prev-winpct}
+![Win Pct at Previous job if HC](img/cfb_sp_vs_Coach_PrevWinPct.png){#fig-prev-winpct}
 
-![Coach *SP+ Rel* before hire](images/cfb_sp_vs_Coach_sp_rel_before.png){#fig-coach-sp-before}
+![Coach *SP+ Rel* before hire](img/cfb_sp_vs_Coach_sp_rel_before.png){#fig-coach-sp-before}
 
-![Numb. of games as HC](images/cfb_sp_vs_numb_gamesAsHC.png){#fig-games-hc}
+![Numb. of games as HC](img/cfb_sp_vs_numb_gamesAsHC.png){#fig-games-hc}
 
-![Team Win Pct in last 5 years](images/cfb_sp_vs_TeamWinPctRecent.png){#fig-team-winpct-recent}
+![Team Win Pct in last 5 years](img/cfb_sp_vs_TeamWinPctRecent.png){#fig-team-winpct-recent}
 
 Additional plots comparing numeric predictors and *SP+ Rel*
 :::
