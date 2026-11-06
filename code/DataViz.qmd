@@ -14,7 +14,7 @@ library(ggplot2)
 ```
 
 ```{r}
-coach_all_df<-read.csv("G:/My Drive/R/cfb_coaches/Data/cfb_coaches_all.csv")%>%
+coach_all_df<-read.csv("data/cfb_coaches_all.csv")%>%
   filter(first_season<2025)
 ```
 
@@ -335,5 +335,28 @@ ggplot( aes(x = sp_prev_rel, y = sp_rel_team)) +
    labs(title = "SP+ Rel vs Coach SP+ before Hiring",
         subtitle="Only College HC Coaches for which we have SP+",
        x = "Coach SP+ Rel before Hiring ",
+       y = "SP+ relative to Team (Prev 15 years) as Coach")
+```
+
+```{r}
+ggplot(coach_all_df, aes(x = NumberPriorStops, y = sp_rel_team)) +
+  geom_point()+geom_smooth(method="lm")+
+   labs(title = "SP+ Rel vs Team SP+ in Previous 15 Years before Hired Plot",
+       x = "Number of Prior Coaching Stops",
+       y = "SP+ relative to Team (Prev 15 years) as Coach")
+```
+```{r}
+ggplot(coach_all_df, aes(x = NumberPriorStops, y = sp_rel_team)) +
+  geom_point()+geom_smooth()+
+   labs(title = "SP+ Rel vs Team SP+ in Previous 15 Years before Hired Plot",
+       x = "Number of Prior Coaching Stops",
+       y = "SP+ relative to Team (Prev 15 years) as Coach")
+```
+
+```{r}
+ggplot(coach_all_df, aes(x = team_sp_prev, y = sp_rel_team)) +
+  geom_point()+geom_smooth(method="lm")+
+   labs(title = "SP+ Rel vs Recent Team SP+ in Previous 5 Years",
+       x = "Team SP+ in last 5 years",
        y = "SP+ relative to Team (Prev 15 years) as Coach")
 ```

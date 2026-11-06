@@ -16,9 +16,9 @@ set.seed(11125)
 Read in the data including values to which we want to predict
 
 ```{r}
-coach_all_df<-read.csv("G:/My Drive/R/cfb_coaches/Data/cfb_coaches_all.csv") %>%
+coach_all_df<-read.csv("data/cfb_coaches_all.csv") %>%
   filter(first_season<2025)
-coach_pred_df<-read.csv("G:/My Drive/R/cfb_coaches/Data/cfb_coaches_all.csv") %>%
+coach_pred_df<-read.csv("data/cfb_coaches_all.csv") %>%
   filter(first_season==2026)
 
 ```
@@ -49,7 +49,7 @@ X=coach_all_df %>%
          numb_years_Coord_HCadj,numb_years_Coord_HCadj2, AllPriorWinPct,
          PreviousHC,PreviousOC,PreviousDC, Conf.LeavingP4,SameConf,AgeAtHiringMinus50,
          sp_prev_rel,winpct_prev_rel,team_sp_prev,team_sp_recent,
-         GamesAsHCPrior, team_winpct_recent,Side_O,PromoteWithin) %>%
+         GamesAsHCPrior, team_winpct_recent,Side_O,PromoteWithin,NumberPriorStops) %>%
   as.matrix()
 
 ```
@@ -74,7 +74,7 @@ X_pred = coach_pred_df %>%
          numb_years_Coord_HCadj,numb_years_Coord_HCadj2, AllPriorWinPct,
          PreviousHC,PreviousOC,PreviousDC, Conf.LeavingP4,SameConf,AgeAtHiringMinus50,
          sp_prev_rel,winpct_prev_rel,team_sp_prev,team_sp_recent,
-         GamesAsHCPrior, team_winpct_recent,Side_O,PromoteWithin) %>%
+         GamesAsHCPrior, team_winpct_recent,Side_O,PromoteWithin, NumberPriorStops) %>%
   as.matrix()
 ```
 
@@ -299,4 +299,135 @@ coach_pred_df %>% mutate(pred=round(pred_lasso2,1)) %>%
   mutate(pred_srs=round(pred+team_srs_prev,1))%>%
   arrange(school)%>%select(name,school,pred_srs,pred)
     
+```
+
+
+```{r}
+library(glmnet)
+library(ranger)   # Fast random forest package
+library(xgboost)  # XGBoost package
+
+numb_reps <- 20
+nfolds <- 8
+
+out <- data.frame(
+  lasso_cvm        = rep(NA, numb_reps),
+  lasso_lambda_min = rep(NA, numb_reps),
+  ridge_cvm        = rep(NA, numb_reps),
+  ridge_lambda_min = rep(NA, numb_reps),
+  rf_cvm           = rep(NA, numb_reps),
+  xgb_cvm          = rep(NA, numb_reps),
+  xgb_nrounds_min  = rep(NA, numb_reps)
+)
+
+set.seed(110526)
+
+for (i in 1:numb_reps) {
+  # 0. Generate unified fold assignments for iteration i
+  foldid <- sample(rep(1:nfolds, length.out = nrow(X)))
+  xgb_folds <- split(seq_len(nrow(X)), foldid)  # Convert to list of test indices for XGBoost
+  
+  # 1. Lasso & Ridge (glmnet using foldid)
+  cv_cfb_ridge <- cv.glmnet(X, y, alpha = 0, foldid = foldid, penalty.factor = c(0, rep(1, ncol(X) - 1)))
+  cv_cfb_lasso <- cv.glmnet(X, y, alpha = 1, foldid = foldid, penalty.factor = c(0, rep(1, ncol(X) - 1)))
+  
+  out$lasso_cvm[i]        <- min(cv_cfb_lasso$cvm)
+  out$lasso_lambda_min[i] <- cv_cfb_lasso$lambda.min
+  out$ridge_cvm[i]        <- min(cv_cfb_ridge$cvm)
+  out$ridge_lambda_min[i] <- cv_cfb_ridge$lambda.min
+  
+  # 2. Random Forest (ranger using foldid)
+  rf_mse <- numeric(nfolds)
+  for (k in 1:nfolds) {
+    train_idx <- foldid != k
+    test_idx  <- foldid == k
+    
+    rf_fit <- ranger(
+      x = X[train_idx, ],
+      y = y[train_idx],
+      num.trees = 500
+    )
+    preds <- predict(rf_fit, data = X[test_idx, ])$predictions
+    rf_mse[k] <- mean((y[test_idx] - preds)^2)
+  }
+  out$rf_cvm[i] <- mean(rf_mse)
+  
+  # 3. XGBoost (xgb.cv using xgb_folds)
+  dtrain <- xgb.DMatrix(data = as.matrix(X), label = y)
+  xgb_cv <- xgb.cv(
+    params = list(objective = "reg:squarederror", eval_metric = "rmse"),
+    data = dtrain,
+    folds = xgb_folds,
+    nrounds = 100,
+    early_stopping_rounds = 10,
+    verbose = FALSE
+  )
+  
+  out$xgb_cvm[i]         <- min(xgb_cv$evaluation_log$test_rmse_mean)^2
+  out$xgb_nrounds_min[i] <- xgb_cv$early_stop$best_iteration
+}
+```
+
+```{r}
+out_mean_cv=data.frame(lasso=mean(out$lasso_cvm),
+                       ridge=mean(out$ridge_cvm),
+                       random_forests=mean(out$rf_cvm),
+                       xgboost=mean(out$xgb_cvm))
+out_mean_cv
+```
+```{r}
+cv_cfb_lasso<-cv.glmnet(X,y,alpha=1,nfolds=8, penalty.factor=c(0,rep(1,ncol(X)-1)))
+
+coef(cv_cfb_lasso, s = "lambda.min")
+plot(cv_cfb_lasso)
+```
+```{r}
+coef_matrix <- coef(cv_cfb_lasso, s = "lambda.min")
+
+# Option A: Extract as a named vector
+coef_vec <- as.matrix(coef_matrix)[, 1]
+nonzero_coefs <- coef_vec[coef_vec != 0]
+
+# Print non-zero coefficients (includes intercept if non-zero)
+print(round(nonzero_coefs,2))
+```
+```{r}
+# 1. Minimum CV MSE from the cv.glmnet object
+mse_cv <- min(cv_cfb_lasso$cvm)
+
+# 2. Population variance of y (matching glmnet's MSE denominator)
+var_y <- mean((y - mean(y))^2)
+
+# 3. Cross-validated R-squared
+r2_cv <- 1 - (mse_cv / var_y)
+print(r2_cv)
+```
+```{r}
+pred_lasso_min=predict(cv_cfb_lasso,X,type="response", s = "lambda.min")
+truth_table=table(pred_lasso_min>0,coach_all_df$sp_rel_team>0)
+accuracy_lasso=100*round(sum(diag(truth_table))/sum(truth_table),2)
+```
+
+```{r}
+top_coaches=coach_all_df %>%
+  arrange(desc(sp_rel_team)) %>%
+  mutate(Rank=1:nrow(coach_all_df)) %>%
+  select (Rank,name,school,sp_rel_team, sp_rel_team_z,numb_seasons) %>%
+  slice(1:10) %>%
+  mutate(sp_rel_team=round(sp_rel_team,1)) %>%
+  mutate(sp_rel_team_z=round(sp_rel_team_z,2)) 
+
+bottom_coaches=coach_all_df %>%
+  arrange(sp_rel_team) %>%
+   mutate(Rank=nrow(coach_all_df):1) %>%
+  select (Rank,name,school,sp_rel_team, sp_rel_team_z,numb_seasons) %>%
+  slice(1:10) %>%
+  mutate(sp_rel_team=round(sp_rel_team,1)) %>%
+  mutate(sp_rel_team_z=round(sp_rel_team_z,2)) %>%
+  arrange(Rank)
+
+top_bottom=bind_rows(top_coaches,bottom_coaches)
+
+
+kable(top_bottom,col.names = c("Rank","Coach","School", "SP+ Rel", "SP+ Rel Z", "Seasons as Coach"),  caption = "Top 10 and Bottom 10 Coaching Performances")
 ```
