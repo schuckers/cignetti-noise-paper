@@ -7,7 +7,7 @@ editor: visual
 ### Loading necessary libraries
 
 ```{r}
-library(cfbfastR)
+require(cfbfastR)
 library(tidyverse)
 library(glmnet)
 ```
