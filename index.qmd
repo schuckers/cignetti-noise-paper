@@ -10,7 +10,7 @@ keywords:
   -sports analytics
   -college football
   -regularization
-  -predicitive modelling
+  -predictive modelling
   -machine learning
   -coaching
 abstract: 
