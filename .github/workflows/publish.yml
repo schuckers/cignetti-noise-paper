@@ -24,6 +24,10 @@ jobs:
       - name: Restore renv packages
         uses: r-lib/actions/setup-renv@v2
 
+      - name: Install cfbfastrR
+        run: | 
+          Rscript -e 'install.packages("cfbfastR", repos = "https://cloud.r-project.org")'
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           upgrade: 'TRUE'
