@@ -2,8 +2,6 @@
 title: "The Cignetti and The Noise: A Model for Predicitng Power 4 College Football Coaching Hire Success"
 author: "Anonymous Author"
 date: last-modified
-citation:
-  container-title: Statistics and Data Science in Sports
 number-sections: true
 bibliography: sports.bib
 keywords:
