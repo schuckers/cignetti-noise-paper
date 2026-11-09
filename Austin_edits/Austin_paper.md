@@ -47,7 +47,7 @@ the data that we collected through both automated and manual means. Summaries of
 we used as predictors are given in Section 3. We describe our model building process and results
 in Section 4. Finally, we conclude with a discussion of our results.
 
----
+
 ∗ = With apologies to Samuel Beckett.
 
 ### **2 Data**
