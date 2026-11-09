@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Anonymous Author">
+<meta name="dcterms.date" content="2026-11-09">
+<meta name="keywords" content="-sports analytics -college football -regularization -predictive modelling -machine learning -coaching">
+
+<title>The Cignetti and The Noise: A Model for Predicitng Power 4 College Football Coaching Hire Success</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-c6bfc1a4d67562019fe79a65ad91e892.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta name="citation_title" content="The Cignetti and The Noise: A Model for Predicitng Power 4 College Football Coaching Hire Success">
+<meta name="citation_abstract" content="Using data on 117 recent Power 4 college football hires, we built a statistical model for predicting a coach’s success at their new school.   For each hire, we collected data about their background and experiences, the previous success as a head coach or coordinator and their success since hiring.   Over 50 variables on these factors were recorded though we used 29 of these in building our predictive model.   Our measure of success is based upon Bill Connelly’s SP+ team ratings relative to the performance on the same metric of the school   in the 15 years prior to their selection as head coach.   Using a cross-validated regularized linear regression, we obtain a predictive model for coaching success.   Among the important factors for predicting a successful hire are having been a previous college head coach, leaving a job as an Offensive Coordinator, age and quality of the hiring school's team in the previous 15 years.   While we do find these factors are important for the prediction of a successful coaching hire, the trends here are weak.   With 66% accuracy, the model does identify coaching hires that will outperform team performance in the 15 years before the hire.   However, no combination of these factors leads to high predictability of identifying a successful coaching hire.">
+<meta name="citation_keywords" content="-sports analytics -college football -regularization -predictive modelling -machine learning -coaching">
+<meta name="citation_author" content="Anonymous Author">
+<meta name="citation_publication_date" content="2026-11-09">
+<meta name="citation_cover_date" content="2026-11-09">
+<meta name="citation_year" content="2026">
+<meta name="citation_online_date" content="2026-11-09">
+<meta name="citation_language" content="en">
+<meta name="citation_reference" content="citation_title=Regularization paths for generalized linear models via coordinate descent; citation_author=Jerome Friedman; citation_author=Trevor Hastie; citation_author=Robert Tibshirani; citation_publication_date=2010; citation_cover_date=2010; citation_year=2010; citation_issue=1; citation_doi=10.18637/jss.v033.i01; citation_volume=33; citation_firstpage=1; citation_lastpage=22; citation_journal_title=Journal of Statistical Software;">
+<meta name="citation_reference" content="citation_title=2025 college football SP+ rankings for all 136 FBS teams; citation_author=Bill Connelly; citation_publication_date=2025; citation_cover_date=2025; citation_year=2025; citation_publisher=https://www.espn.com/college-football/story/_/id/46128861/2025-college-football-sp+-rankings-all-136-fbs-teams;">
+<meta name="citation_reference" content="citation_title=Explaining S&amp;P+, college football’s deepest advanced analytics system; citation_author=Bill Connelly; citation_publication_date=2017; citation_cover_date=2017; citation_year=2017; citation_publisher=https://www.sbnation.com/college-football/2017/10/13/16457830/college-football-advanced-stats-analytics-rankings;">
+<meta name="citation_reference" content="citation_title=Talking tech: Creating a simple rating system; citation_author=Bill Radjewski; citation_publication_date=2020; citation_cover_date=2020; citation_year=2020; citation_publisher=https://blog.collegefootballdata.com/talking-tech-bu/;">
+<meta name="citation_reference" content="citation_title=It doesn’t hurt to hire alumni as head coaches. But it doesn’t help, either.; citation_author=Josh Planos; citation_publication_date=2019; citation_cover_date=2019; citation_year=2019; citation_publisher=https://fivethirtyeight.com/features/it-doesnt-hurt-to-hire-alumni-as-head-coaches-but-it-doesnt-help-either/;">
+<meta name="citation_reference" content="citation_title=Complete list of the highest-paid state employees: College coaches dominate top earning public sector workers; citation_author=David Evans; citation_publication_date=2023; citation_cover_date=2023; citation_year=2023; citation_publisher=https://thesportsdaily.org/news/complete-list-of-the-highest-paid-state-employees-college-coaches-dominate-top-earning-public-sector-workers/;">
+<meta name="citation_reference" content="citation_title=What the top 75 college sports programs are worth; citation_author=Michael Ozanian; citation_publication_date=2024; citation_cover_date=2024; citation_year=2024; citation_publisher=https://www.cnbc.com/2024/12/19/college-sports-programs-valuations.html;">
+<meta name="citation_reference" content="citation_title=cfbfastR: The SportsDataverse’s r package for college football data.; citation_author=Saiem Gilani; citation_author=Akshay Easwaran; citation_author=Jared Lee; citation_author=Eric Hess; citation_publication_date=2021; citation_cover_date=2021; citation_year=2021; citation_fulltext_html_url=https://cfbfastR.sportsdataverse.org/;">
+</head>
+
+<body class="quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">The Cignetti and The Noise: A Model for Predicitng Power 4 College Football Coaching Hire Success</h1>
+          </div>
+
+    
+    <div class="quarto-title-meta-container">
+      <div class="quarto-title-meta-column-start">
+        
+        <div class="quarto-title-meta">
+
+                <div>
+            <div class="quarto-title-meta-heading">Author</div>
+            <div class="quarto-title-meta-contents">
+                        <p>Anonymous Author </p>
+                      </div>
+          </div>
+                
+                <div>
+            <div class="quarto-title-meta-heading">Published</div>
+            <div class="quarto-title-meta-contents">
+              <p class="date">November 9, 2026</p>
+            </div>
+          </div>
+          
+                
+              </div>
+      </div>
+      <div class="quarto-title-meta-column-end quarto-other-formats-target">
+      <div class="quarto-alternate-formats"><div class="quarto-title-meta-heading">Other Formats</div><div class="quarto-title-meta-contents"><p><a href="index.pdf"><i class="bi bi-file-pdf"></i>PDF (jasa)</a></p></div></div></div>
+    </div>
+
+    <div>
+      <div class="abstract">
+        <div class="block-title">Abstract</div>
+        Using data on 117 recent Power 4 college football hires, we built a statistical model for predicting a coach’s success at their new school. For each hire, we collected data about their background and experiences, the previous success as a head coach or coordinator and their success since hiring. Over 50 variables on these factors were recorded though we used 29 of these in building our predictive model. Our measure of success is based upon Bill Connelly’s SP+ team ratings relative to the performance on the same metric of the school in the 15 years prior to their selection as head coach. Using a cross-validated regularized linear regression, we obtain a predictive model for coaching success. Among the important factors for predicting a successful hire are having been a previous college head coach, leaving a job as an Offensive Coordinator, age and quality of the hiring school’s team in the previous 15 years. While we do find these factors are important for the prediction of a successful coaching hire, the trends here are weak. With 66% accuracy, the model does identify coaching hires that will outperform team performance in the 15 years before the hire. However, no combination of these factors leads to high predictability of identifying a successful coaching hire.
+      </div>
+    </div>
+
+    <div>
+      <div class="keywords">
+        <div class="block-title">Keywords</div>
+        <p>-sports analytics -college football -regularization -predictive modelling -machine learning -coaching</p>
+      </div>
+    </div>
+
+    <div class="quarto-other-links-text-target">
+    </div>  </div>
+</header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">2</span> Data</a></li>
+  <li><a href="#model-and-results" id="toc-model-and-results" class="nav-link" data-scroll-target="#model-and-results"><span class="header-section-number">3</span> Model and Results</a></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion"><span class="header-section-number">4</span> Discussion</a></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix"><span class="header-section-number">5</span> Appendix</a></li>
+  </ul>
+<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="index-preview.html"><i class="bi bi-journal-code"></i>Article Notebook</a></li></ul></div></nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+  
+
+
+<!-- Code for running results-->
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>College football is big business. The changes due to the use of player’s name, image and license (NIL) that allow players to be openly (and appropriately) paid for their services, has brought a new influx of funds. A December 2024 study by CNBC using fiscal year 2023 numbers estimated that the top university athletic programs are valued at over $1 billion US dollars and have annual revenue of over $200 million <span class="citation" data-cites="cnbc_college_worth">(<a href="#ref-cnbc_college_worth" role="doc-biblioref">Ozanian 2024</a>)</span>. Unsurprisingly the executive that leads the college football operation, the head coach, are well compensated. In a 2023 study, David Evans found that “80% of the Highest-Earning Public Employees are College Head Coaches” <span class="citation" data-cites="highest_state">(<a href="#ref-highest_state" role="doc-biblioref">Evans 2023</a>)</span>.</p>
+<p>Being a successful college football head coach requires multifaceted talent in a variety of areas including player development, staff management, in gameday decision making, in player evaluation and in recruitment of players. Consequently, the selection of a new coach for top universities is an important one. This paper proposes two novel contributions.<br>
+First, we propose methodology for evaluating coaching hires by comparing coaching success to previous performance at a given institution.<br>
+Using those performance measures we build a model to predict which coaching hires will be successful using hand collected data about each coach’s background, experiences, and previous success as a coach. We then develop a machine learning predictive model which finds that there are a few factors that discernibly predict a coaching hire’s future performance. However, it is clear that our model’s predictions are far from certain and that there is a great deal of noise relative to the signals in the data about who would make a successful coach.</p>
+<p>In the rest of this paper we look at past hiring of college football head coaches to build a predictive model of the characteristics and factors that influence their success. The next Section introduces the data that we collected through both automated and manual means. Summaries of the variables we used as predictors are given in Section 3. We describe our model building process and results in Section 4. Finally we conclude with a discussion of our results.</p>
+</section>
+<section id="data" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Data</h1>
+<p>The data set used for this analysis is a collection of Power 4 plus the University of Notre Dame (IN) coaching hires. We will refer to this group as P4 schools. The P4 conferences are the Atlantic Coast Conference (ACC), Big 12, Big Ten and Southeastern Conference (SEC). We began with all coaching hires who started coaching during the 2016 season or since. We added at least once coach from each school so that Kirk Ferentz is in our data. That gave us hires.</p>
+<p>Specifically, we include P4 coaching hires who started coaching between 2016 and 2024. As our observational units, we chose hires rather than coaches, since it is the outcome of the hiring process we are trying to maximize. Consequently, Kirk Ferentz, the current dean of college football, is in the data. Nick Saban is not among our data, but James Franklin is in the data, as the only Penn State coach over this time period. Matt Rhule appears twice having been hired at Baylor (in 2017) and at Nebraska (in 2023). We did not include interim coaches and, of course, as the title implies Curt Cignetti is one of our observations and an outlier. In total there are 117 coaching hires in these data.</p>
+<p>For each hire in our data, we recorded over <span class="math inline">\(50\)</span> measurements about their past history though we used 30 as predictors below. Generally these fall into three categories: background variables, previous coaching performance, and performance metrics in the job for which they were hired. Included in the background variables are information about their coaching career, their previous coaching positions, whether or not they have previously coached in the NFL, whether or not they had previously been a HC, whether they had played or coached previously at the hiring institution, etc. Previous coaching performance variables are recorded and include previous performance as a college head coach. Variables on a coaches background included features such as whether or not they had a previous connection to the hiring school, whether they played P4 football, and whether they had coached in the NFL. A full list of all variables is presented in <a href="#tbl-var" class="quarto-xref">Table&nbsp;2</a> of the Appendix. One of the metrics we considered was having a connection to the hiring school by being an alumni or having played there or having coached there. Having an alumni as your head coach was previously analyzed by Josh Planos of FiveThirtyEight and found to not impact coaching success either way <span class="citation" data-cites="alumni_538">(<a href="#ref-alumni_538" role="doc-biblioref">Planos 2019</a>)</span>. ZZZ need to add the more recent articles ZZZ. To account for regression to the mean, a team that was underperforming relative to historical averages before a coach arrived, we also included the team’s average performance for the five years before the hired coach arrived.</p>
+<div id="fig-cat1" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cat1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<a href="img/cfb_sp_vs_RegionalTies.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Plots for selected categorical predictors vs SP Rel +"><img src="img/cfb_sp_vs_RegionalTies.png" id="fig-reg-ties" class="img-fluid figure-img" style="width:40.0%"></a>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cat1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Plots for selected categorical predictors vs SP Rel +
+</figcaption>
+</figure>
+</div>
+<p>To determine how successful each coach was as a hire we calculated their performance as a HC relative to the historical performance of the university where they were hired. For performance we considered three measurements. First we considered a hire’s win percentage since winning is arguably the most important outcome for a head coach. Second, we considered a coach’s average Simple Rating System (SRS). This metric, SRS, is a “weighted scoring margin” where the weighted part is based upon the quality of the teams that have been played <span class="citation" data-cites="intro_srs">(<a href="#ref-intro_srs" role="doc-biblioref">Radjewski 2020</a>)</span>. Third, we considered a coaches average relative SP+ which is a predictive metric developed by Bill Connelly <span class="citation" data-cites="intro_sp">(<a href="#ref-intro_sp" role="doc-biblioref">Connelly 2017</a>)</span> that is a “tempo- and opponent-adjusted measure” of team efficiency <span class="citation" data-cites="sp_2025">(<a href="#ref-sp_2025" role="doc-biblioref">Connelly 2025</a>)</span>. The historical values for win percentage, SRS and SP+ were obtained using the <em>cfbfastr</em> package <span class="citation" data-cites="cfbfastr">(<a href="#ref-cfbfastr" role="doc-biblioref">Gilani et al. 2021</a>)</span>. We augmented those data with wins and losses from the 2025 season.</p>
+<div class="cell">
+<div id="tbl-top-bottom" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-top-bottom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Top 10 and Bottom 10 Coaching Performances Based Upon SP+ Rel
+</figcaption>
+<div aria-describedby="tbl-top-bottom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 11%">
+<col style="width: 14%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Rank</th>
+<th style="text-align: left;">Coach</th>
+<th style="text-align: left;">School</th>
+<th style="text-align: right;">SP+ Rel</th>
+<th style="text-align: right;">SP+ Rel Z</th>
+<th style="text-align: right;">Seasons as Coach</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Curt Cignetti</td>
+<td style="text-align: left;">Indiana</td>
+<td style="text-align: right;">26.5</td>
+<td style="text-align: right;">3.25</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Josh Heupel</td>
+<td style="text-align: left;">UCF</td>
+<td style="text-align: right;">21.1</td>
+<td style="text-align: right;">2.59</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Sonny Dykes</td>
+<td style="text-align: left;">SMU</td>
+<td style="text-align: right;">17.8</td>
+<td style="text-align: right;">2.18</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Rhett Lashlee</td>
+<td style="text-align: left;">SMU</td>
+<td style="text-align: right;">17.0</td>
+<td style="text-align: right;">2.08</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Mike Gundy</td>
+<td style="text-align: left;">Oklahoma State</td>
+<td style="text-align: right;">13.8</td>
+<td style="text-align: right;">1.69</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">Mike Elko</td>
+<td style="text-align: left;">Duke</td>
+<td style="text-align: right;">10.7</td>
+<td style="text-align: right;">1.31</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Dabo Swinney</td>
+<td style="text-align: left;">Clemson</td>
+<td style="text-align: right;">10.2</td>
+<td style="text-align: right;">1.26</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Matt Campbell</td>
+<td style="text-align: left;">Iowa State</td>
+<td style="text-align: right;">10.1</td>
+<td style="text-align: right;">1.23</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Bret Bielema</td>
+<td style="text-align: left;">Illinois</td>
+<td style="text-align: right;">9.3</td>
+<td style="text-align: right;">1.14</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">Lane Kiffin</td>
+<td style="text-align: left;">Ole Miss</td>
+<td style="text-align: right;">9.2</td>
+<td style="text-align: right;">1.13</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">108</td>
+<td style="text-align: left;">Kalen DeBoer</td>
+<td style="text-align: left;">Alabama</td>
+<td style="text-align: right;">-11.5</td>
+<td style="text-align: right;">-1.41</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">109</td>
+<td style="text-align: left;">Ryan Walters</td>
+<td style="text-align: left;">Purdue</td>
+<td style="text-align: right;">-11.7</td>
+<td style="text-align: right;">-1.44</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">110</td>
+<td style="text-align: left;">Brent Pry</td>
+<td style="text-align: left;">Virginia Tech</td>
+<td style="text-align: right;">-13.0</td>
+<td style="text-align: right;">-1.59</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">111</td>
+<td style="text-align: left;">Deshaun Foster</td>
+<td style="text-align: left;">UCLA</td>
+<td style="text-align: right;">-13.2</td>
+<td style="text-align: right;">-1.62</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">112</td>
+<td style="text-align: left;">Jonathan Smith</td>
+<td style="text-align: left;">Michigan State</td>
+<td style="text-align: right;">-13.5</td>
+<td style="text-align: right;">-1.66</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">113</td>
+<td style="text-align: left;">Luke Fickell</td>
+<td style="text-align: left;">Wisconsin</td>
+<td style="text-align: right;">-14.8</td>
+<td style="text-align: right;">-1.82</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">114</td>
+<td style="text-align: left;">Geoff Collins</td>
+<td style="text-align: left;">Georgia Tech</td>
+<td style="text-align: right;">-16.3</td>
+<td style="text-align: right;">-1.99</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">115</td>
+<td style="text-align: left;">Chad Morris</td>
+<td style="text-align: left;">Arkansas</td>
+<td style="text-align: right;">-18.0</td>
+<td style="text-align: right;">-2.20</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">116</td>
+<td style="text-align: left;">Willie Taggart</td>
+<td style="text-align: left;">Florida State</td>
+<td style="text-align: right;">-19.1</td>
+<td style="text-align: right;">-2.34</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">117</td>
+<td style="text-align: left;">Troy Taylor</td>
+<td style="text-align: left;">Stanford</td>
+<td style="text-align: right;">-21.5</td>
+<td style="text-align: right;">-2.64</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<a class="quarto-notebook-link" id="nblink-1" href="index-preview.html">Source: Article Notebook</a></div>
+<p>One of the significant challenges for this type of analysis is to define success. This is certainly the case here, and in no small part is due to the expectations for each school. What might be a successful record at Arizona, might not be a success at Alabama. What gets a coach an extension in College Park, might be a reason to be fired in College Station or State College. Consequently, our definition of coaching performance is relative (to team history) rather than absolute.</p>
+<p>For relative performance, we took the trimmed mean [ ‘mean(x,trim=0.1)’]{style=“font-family: ‘Courier New’;022} in R) of the middle 80% of years of the performance metric for their time as a head coach and subtracted the team average of that same metric for the fifteen years before the coach was hired. We chose to use SP+ as our measure and we refer to <em>SP+ Rel</em> as our outcome variable below. Note that the correlation between SRS relative to past team performance and SP+ relative to past team performance was 0.95, results using the former as a response are likely to be very similar to those for the latter and so we did not consider models with different responses. The correlation between <em>SP+ Rel</em> and a winning percentage relative to past teams was 0.82.</p>
+<p>Using the R package <em>cfbfastr</em>, we obtained historical team data including wins and losses through the 2024 season as well as SRS and SP+ ratings into the 2025 season. We manually added wins and losses for the 2025 season. All of these data can be found at: <a href="https://github.com/schuckers/cignetti-noise-paper">https://github.com/schuckers/cignetti-noise-paper</a>. Data on coaching performance is complete through midday on November 13, 2025.</p>
+<p>Among these 117 college football head coaching hires in our data, there were 58 who left a job as head coach (HC) at another school, and 73 of our hires had been a HC at some level previous to their being hired. Thirty of the hired coaches had been Defensive Coordinators (DCs) and 17 were Offensive Coordinators (OCs). The other previous positions included four position coaches, an offensive analyst, four Associate or Assistant HCs and one hire who was not employed in football. While more coaches were hired directly from DC positions, 45 of the 117 hires (38%) had defense as their background. Seventy-three (73 of the hires had been a head coach at the college or NFL previously, while 26 had previously coached in the NFL. Thirty percent of the coaches were hired to jobs within the same conference. Only 18 of our hires were promoted from the coaching staff of the same institution. The average age of our coaches when they were hired is approximately 47 years.</p>
+<p>The majority of hired coaches, 74, had not worked for, played at or attended the school that hired them. While the vast majority of the hired coaches played college football, just under 50% of them, 56, played for a P4 school and only 12 played in the NFL.</p>
+<p>Below when we refer to recent metrics we will be talking about a five year period and when we refer to previous metrics we will be talking about a 15 year period.</p>
+<div id="fig-numeric1" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-numeric1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<a href="img/cfb_sp_vs_numb_yrs_Coord_HC_quad.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Plots for selected numeric predictors vs SP Rel"><img src="img/cfb_sp_vs_numb_yrs_Coord_HC_quad.png" id="fig-yrs-coord" class="img-fluid figure-img" style="width:30.0%"></a>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-numeric1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Plots for selected numeric predictors vs SP Rel
+</figcaption>
+</figure>
+</div>
+<p>Next we will look at some of relationship between our variables and our measure of coaching performance, <em>SP+ Rel</em>. <a href="#tbl-var" class="quarto-xref">Table&nbsp;2</a> contains the list of predictor variables as well as their definitions. Turning to the graphics, we see a sampling of these relationship in <a href="#fig-cat1" class="quarto-xref">Figure&nbsp;1</a>. In that figure, we can see that medians (red lines) seem to indicate there are some differences between the categories for winning a national championship as a coordinator, <strong>?@fig-prev-nc</strong>, and for previous job was as an OC, <strong>?@fig-oc</strong>. Otherwise the other variables do not seem to suggest there is much difference in the typical coaching performance for the different characteristics recorded in those subfigures. More graphics like these can be found for the other categorical predictors in <a href="#fig-append-cat" class="quarto-xref">Figure&nbsp;3</a> and <a href="#fig-append-cat2" class="quarto-xref">Figure&nbsp;4</a>. In those graphics, <a href="#fig-append-cat" class="quarto-xref">Figure&nbsp;3</a> (d) suggests that having played in the NFL yields a higher median <em>SP+ Rel</em> as does having previously won a national championship as a coordinator, <a href="#fig-append-cat2" class="quarto-xref">Figure&nbsp;4</a> (b). However, quite a bit fewer coaches have the value that is associated with the higher median.</p>
+<p>Turning to numeric predictors, we can see the relationship between <em>SP+ Rel</em> and four of these predictors in <a href="#fig-numeric1" class="quarto-xref">Figure&nbsp;2</a>. In <strong>?@fig-yrs-coord</strong>, we can see that there is not a relationship between number of years as a HC or Coordinator before being hired. The three remaining subfigures, <strong>?@fig-age</strong>, <strong>?@fig-sp-recent</strong>, <strong>?@fig-sp-prev15</strong>, also show negative linear relationships between <em>SP+ Rel</em> and coach’s age, teams performance in the recent past, 5 years, and team performance in the previous 15 years. More figures like this can be found in <a href="#fig-append-numeric" class="quarto-xref">Figure&nbsp;5</a> of the Appendix at the end of this report. Noteworthy among those figures in the Appendix is that there seems to be a positive linear relationship between a hired coach’s <em>SP+ Rel</em> and their previous <em>SP+ Rel</em> had they been a college HC previously.</p>
+</section>
+<section id="model-and-results" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Model and Results</h1>
+<p>The goal of this analysis is to build a predictive model for the success of a coaching hire and to identify the factors that impact that success. We selected 29 predictors found in <a href="#tbl-var" class="quarto-xref">Table&nbsp;2</a> that could be useful for predicting coaching success. For our model formulation, we chose to build a regularized linear regression model for SP+ relative to past team performance, hereafter <em>SP+ Rel</em>. We used <code>cv.glmnet</code> as part of the <code>glmnet</code> library in R <span class="citation" data-cites="glmnet">(<a href="#ref-glmnet" role="doc-biblioref">Friedman et al. 2010</a>)</span>. For our regularization, we considered both ridge and lasso regression, and we used 8-fold cross validated performance to determine the regularization/shrinkage parameter, <span class="math inline">\(\lambda\)</span>, for our model. We ran 20 different randomizations of 8-fold cross validation. Consistently, across all these different randomizations of the folds, we found that the best lasso model had a smaller out of sample prediction error (via MSE) than the best ridge model. To get the parameter coefficient estimates discussed below we fit the full model via a lasso with <span class="math inline">\(\lambda\)</span> set to the average of the shrinkage parameters that minimized the cross-validation error. In fact there was no variability in these shrinkage parameters across the 20 randomizations. Because some of our predictors, e.g.&nbsp;<code>sp_prev_rel</code>, were available only if a coach had previously been a college HC, we included whether or not a coach was previously an HC in all of the models we considered.</p>
+<p>Our final prediction equation is:</p>
+<p><span class="math display">\[\hspace{-4in} SP+ Rel = 0.88 -0.42 \text{ Was College HC before at any level} + \]</span> <span class="math display">\[2.37 \text{ Previous job was as an OC} - 0.34 \text{ Hiring School's Team SP+ Rel in 15 years before hiring}\]</span> {#eq-predictioneq}</p>
+<p>The largest factors in our model were whether or not the coach’s previous job was as an OC (<code>PreviousOC</code>), whether they had ever been a college coach previously (<code>prevCollegeHC</code>) and the team’s performance over the last 15 years (<code>team_sp_prev</code>). Having been hired from an OC position is associated with about a <span class="math inline">\(2.37\)</span> point increase in a coach’s <em>SP+ Rel</em>. While if a hire was previously a college football HC, the predicted decrease in their team’s performance is fourth-tenths a point. The last term in our prediction equation involves a team’s average <em>SP+ Rel</em> over the previous 15 years and that is negatively associated with how a coaching hire’s teams will perform. We can interpret the value here of <span class="math inline">\(-0.34\)</span> as the expected decrease in a team’s average performance for every additional point of <em>SP+ Rel</em> that the hiring team had over the previous 15 years. This is a regressive effect, since SP+ for an average team should be around zero, then for a new coaching hire, good teams we would expect them to get worse and very good teams we would expect them to get much worse, while for below average teams we would expect them to get better just by making the hire. One possible explanation for this is a regression to the mean as team performance tends to move to the average of all teams, which for SP+ is around zero. Another explanation is college football has moved to an era of more parity and relative coaching performance is not immune to moving with that trend.</p>
+<p>The hires with the ten highest and ten lowest predicted <em>SP+ Rel</em> are listed in <a href="#tbl-top-bottom" class="quarto-xref">Table&nbsp;1</a>. We can see that the model suggests that the hire with the highest predicted success was Rhett Lashlee at SMU. Eight of the ten top predicted <em>SP+ Rel</em> values had positive observed values. Tony Elliott at Virginia and Jedd Fisch at Arizona were the exceptions. Elliott has improved his Virginia teams and, if he stays, may yet get to positive territory. Fisch left Arizona after a successful second season. Among the coaches predicted to have negative <em>SP+ Rel</em>, eight of the ten are in or have finished in negative territory. The exceptions are Dan Mullen whose team performance dropped significantly over his four years at Florida and Kirby Smart who has impressively elevated Georgia to new heights. Seven of these ten coaches have already been fired with only Smart, Fickell and Venables still employed at these schools. Venables’ Oklahoma 2025 team had one of their best recent seasons with him as a HC and so there is hope for a turnaround there. Looking at the bottom ten schools, most of the schools there are considered to be ‘elite’ or nearly so. The model predicts that succeeding at these schools is hard partly because they are already at the upper tail of the distribution. Overall the model accurately predicts whether a coach will have a positive or negative <em>SP+ Rel</em> 67% of the time.</p>
+<p>The model we have explains about <span class="math inline">\(15\%\)</span> of the variability in the team’s performance with a newly hired coach and the average difference between our model’s prediction and the actual <em>SP+ Rel</em> of the coaches in these data is just over <span class="math inline">\(7.5\)</span> points. That is a large amount of variability and it speaks to the noisiness of these data. However, the model does well given that noisiness at predicting who will have a <em>SP+ Rel</em> above or below zero achieving 68% accuracy on this metric.</p>
+<p>While it is important to focus on the factors that do influence hiring success, it is worth mentioning those that do <strong>not</strong> given the factors that <strong>are</strong> in the model. Having a previous connection to the school, being a previous head coach at any level, having NFL coaching experience, having experience as a recruiting coordinator, having played football in the NFL or at a P4 school seem to have no impact on our ability to predict how well a coach will do. Winning a national championship as a HC at any level as well as being a Coordinator for a team that won a national championship or a conference championship does not predict coaching success. Similarly having regional ties to the hiring school does not seem to be impactful and the same is true for moving within the same conference or leaving a P4 school. A coach’s relative SP+ as a previous HC is also not predictive, as is their previous win percentage. One possible explanation is that we are taking averages of previous coaching performance that misses changes in SP+ over a coach’s time with a previous school, e.g.&nbsp;Matt Rhule at Temple and Lance Leipold at Buffalo. Finally, the number of games coached as an HC before being hired is unimportant as a predictor as is the recent winning percentage of the team.</p>
+</section>
+<section id="discussion" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Discussion</h1>
+<p>Choosing a successful P4 college football coach is a difficult task. In this paper we have collected data on recent P4 coaching hires and built a predictive model for their performance. The data we used was on recent P4 hires and we measured their performance using average SP+ relative to previous performance of the school’s teams, <em>SP+ Rel</em>. As mentioned above <em>SP+ Rel</em> is correlated with a coach’s winning percentage and highly correlated with their SRS, the other statistical measure of team performance that we considered.</p>
+<p>Ultimately, we found that there are several factors that are predictive of the performance of a college football head coaching hire. These factors include whether a hire had been a previous college coach, whether the hire had previously won a conference championship as a coach, whether their prior job was as an offensive coordinator, their age and the quality of the team they were hired to lead over the previous 15 years. Our prediction model does not perform particularly well, only explaining just under a quarter of the variability in coaching performance.</p>
+<p>The 2020 season is among the years in these data. The effects of COVID were felt across college football in the form of shortened seasons and empty stadiums. Every school and every conference handled the situation differently. One of the choices we made as part of this analysis was that we would keep the 2020 season in our data. Given the short tenure of some college football head coaching hires, we felt having as much data as possible was important.</p>
+<p>This study measured the success of a coaching hire by how they did on average relative to their team’s previous 15 years. That is not a perfect measure. Team performance fluctuates and trends, sometimes upward and sometimes downward. Ideally when a new coach is hired their teams trend upward as they recruit players that fit their system and they become comfortable in their new job. An average over a short period may miss this effect. That said, it is very difficult to generate a measure of coaching success that captures all of the possible nuances. Therefore, we chose to stick with an average relative to past team performance.</p>
+<p>Much has been made about the recent success of Curt Cignetti and he has done an amazing job as the HC at Indiana. Cignetti is an outlier. It is very clear which observations corresponds to the exceptional job Cignetti has done at Indiana. That said, an outlier is not a trend and the signal from these data is weak. Hiring a coach is hard; hiring a really successful coach is <em>very</em> hard. There are no magic attributes, at least <em>not</em> among the factors we investigated, that guarantee future success. The data as can be seen in <a href="#fig-cat1" class="quarto-xref">Figure&nbsp;1</a> through <a href="#fig-append-numeric" class="quarto-xref">Figure&nbsp;5</a> is very noisy and the trends, while tempting, are mild. Great coaches are hard to find and many schools find themselves having difficulty distinguishing the Cignetti’s from the noise.</p>
+<p>The code and the data for the analyses presented here can be found at <a href="https://github.com/schuckers/cfb_coach_analytics">https://github.com/schuckers/cfb_coach_analytics</a>.</p>
+<p>Thanks to the team of folks who put together <code>cfbfastr</code> for making their data available in a usable and regularly updated manner and to Brian Macdonald (Yale) for thoughtful discussions about this analysis.</p>
+</section>
+<section id="appendix" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Appendix</h1>
+<div id="tbl-var" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: List of variables used as predictors in this paper. All values are relative to the coach at the time they were hired.
+</figcaption>
+<div aria-describedby="tbl-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable Name</th>
+<th style="text-align: left;">Variable Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>prevCollegeHC</code></td>
+<td style="text-align: left;">Were they previously a college head coach (HC)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>PreviousHC</code></td>
+<td style="text-align: left;">Was job when hired as a HC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>PreviousOC</code></td>
+<td style="text-align: left;">Was job when hired as an Offensive Coordinator (OC)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>PreviousDC</code></td>
+<td style="text-align: left;">Was job when hired as a Defensive Coordinator (DC)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>Conf.LeavingP4</code></td>
+<td style="text-align: left;">Was job when hired at P4 school</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>SameConf</code></td>
+<td style="text-align: left;">Was job when hired in same conference</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>AgeAtHiringMinus50</code></td>
+<td style="text-align: left;">Age on Jan 1 of first season as HC</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ConnectionToHiring.School</code></td>
+<td style="text-align: left;">Had coach previously played or been employed at hiring school</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>NFLCoachingExperience</code></td>
+<td style="text-align: left;">Had the coach ever coached in the NFL</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>RecruitingCoord</code></td>
+<td style="text-align: left;">Previously been a recruiting coordinator or not</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>PlayedNFL</code></td>
+<td style="text-align: left;">Had coach played in the NFL</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>Played.Power.4</code></td>
+<td style="text-align: left;">Had coach played at a Power 4 school</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>WonNCasHCany</code></td>
+<td style="text-align: left;">Had coach won a National Championship (NC) as HC at any level (college)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>WonCCasHCany</code></td>
+<td style="text-align: left;">Had coach won a Conference Championship (CC) as HC at any level (college)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>WonNCasCoordAny</code></td>
+<td style="text-align: left;">Had coach won a NC as an OC, DC, or AHC at any level (college)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>WonCCasCoordAny</code></td>
+<td style="text-align: left;">Had coach won a CC as an OC, DC, or AHC at any level (college)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>SideO</code></td>
+<td style="text-align: left;">Is coach’s primary background on Offense</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>LeavingNFL</code></td>
+<td style="text-align: left;">Was previous job in the NFL</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>Regional.Ties</code></td>
+<td style="text-align: left;">Had coach previously worked within 500 miles of hiring school</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>numb_years_Coord_adj</code></td>
+<td style="text-align: left;">Number of years as OC/DC/AHC/HC above average of 11.8 years</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>numb_years_Coord_HCadj2</code></td>
+<td style="text-align: left;">Numbers of years as OC/DC/AHC/HC different from 11.8 squared</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>PromoteWithin</code></td>
+<td style="text-align: left;">Coach was promoted to HC from other position at same school</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">‘NumberPriorStops’</td>
+<td style="text-align: left;">Number of different teams coach worked for before being hired</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>AllPriorWinPct</code></td>
+<td style="text-align: left;">Win Percent as Coach at all levels before being hired</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>winpct_prev_Rel</code></td>
+<td style="text-align: left;">Win percent as HC at previous job</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>team_sp_prev</code></td>
+<td style="text-align: left;">Hiring school’s SP+ in 15 years before hire</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>team_sp_recent</code></td>
+<td style="text-align: left;">Hiring school’s SP+ in 5 years before hire</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>GamesAsHCPrior</code></td>
+<td style="text-align: left;">Number of games as a HC before being hired</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>team_winpct_recent</code></td>
+<td style="text-align: left;">Hiring School’s win percentage in the last 5 years</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>sp_prev_rel</code></td>
+<td style="text-align: left;">Previous <em>SP+ Rel</em> in HC role</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div id="fig-append-cat" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-append-cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-cat" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-last-dc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-last-dc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_LastDC.png" class="lightbox" data-gallery="fig-append-cat" title="Figure&nbsp;3&nbsp;(a): Previous job as DC"><img src="img/cfb_sp_vs_LastDC.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-cat"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-last-dc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Previous job as DC
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-cat" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-prev-hc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-prev-hc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_PreviousHC.png" class="lightbox" data-gallery="fig-append-cat" title="Figure&nbsp;3&nbsp;(b): Previous job as HC"><img src="img/cfb_sp_vs_PreviousHC.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-cat"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-prev-hc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Previous job as HC
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-cat" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-played-p4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-played-p4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_PlayedP4.png" class="lightbox" data-gallery="fig-append-cat" title="Figure&nbsp;3&nbsp;(c): Played P4 football"><img src="img/cfb_sp_vs_PlayedP4.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-cat"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-played-p4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Played P4 football
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-cat" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-played-nfl" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-played-nfl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_PlayedNFL.png" class="lightbox" data-gallery="fig-append-cat" title="Figure&nbsp;3&nbsp;(d): Played in the NFL"><img src="img/cfb_sp_vs_PlayedNFL.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-cat"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-played-nfl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) Played in the NFL
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-cat" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-side-ball" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-side-ball-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_SideOfBall.png" class="lightbox" data-gallery="fig-append-cat" title="Figure&nbsp;3&nbsp;(e): Side of the Ball"><img src="img/cfb_sp_vs_SideOfBall.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-cat"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-side-ball-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(e) Side of the Ball
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-cat" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-promote-within" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-promote-within-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_PromoteWithin.png" class="lightbox" data-gallery="fig-append-cat" title="Figure&nbsp;3&nbsp;(f): Promoted from Within"><img src="img/cfb_sp_vs_PromoteWithin.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-cat"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-promote-within-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(f) Promoted from Within
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-append-cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Additional plots of categorical predictors vs <em>SP+ Rel</em>
+</figcaption>
+</figure>
+</div>
+<div id="fig-append-cat2" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-append-cat2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-cat2" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-nfl-exp" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-nfl-exp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_PrevNFLCoaching.png" class="lightbox" data-gallery="fig-append-cat2" title="Figure&nbsp;4&nbsp;(a): Has NFL coaching experience"><img src="img/cfb_sp_vs_PrevNFLCoaching.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-cat2"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-nfl-exp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Has NFL coaching experience
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-cat2" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-nc-hc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-nc-hc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_WonNCasHCAny.png" class="lightbox" data-gallery="fig-append-cat2" title="Figure&nbsp;4&nbsp;(b): Won Natl. Champ. as HC any level"><img src="img/cfb_sp_vs_WonNCasHCAny.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-cat2"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-nc-hc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Won Natl. Champ. as HC any level
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-cat2" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-cc-coord" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-cc-coord-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_WonCCasCoordAny.png" class="lightbox" data-gallery="fig-append-cat2" title="Figure&nbsp;4&nbsp;(c): Won Conf. Champ. as Coord any level"><img src="img/cfb_sp_vs_WonCCasCoordAny.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-cat2"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-cc-coord-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Won Conf. Champ. as Coord any level
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-cat2" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-same-conf" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-same-conf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_SameConf.png" class="lightbox" data-gallery="fig-append-cat2" title="Figure&nbsp;4&nbsp;(d): Hired within same conference"><img src="img/cfb_sp_vs_SameConf.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-cat2"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-same-conf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) Hired within same conference
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-cat2" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-recruit-coord" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-recruit-coord-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_PrevRecruitCoord.png" class="lightbox" data-gallery="fig-append-cat2" title="Figure&nbsp;4&nbsp;(e): Been Recruiting Coordinator previously"><img src="img/cfb_sp_vs_PrevRecruitCoord.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-cat2"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-recruit-coord-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(e) Been Recruiting Coordinator previously
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-append-cat2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4
+</figcaption>
+</figure>
+</div>
+<p>Additional plots of categorical predictors vs <em>SP+ Rel</em></p>
+<div id="fig-append-numeric" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-append-numeric-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-numeric" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-all-winpct" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-all-winpct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_AllPastWinPctAsHC.png" class="lightbox" data-gallery="fig-append-numeric" title="Figure&nbsp;5&nbsp;(a): All Past Win Pct as HC"><img src="img/cfb_sp_vs_AllPastWinPctAsHC.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-numeric"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-all-winpct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) All Past Win Pct as HC
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-numeric" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-prev-winpct" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-prev-winpct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_Coach_PrevWinPct.png" class="lightbox" data-gallery="fig-append-numeric" title="Figure&nbsp;5&nbsp;(b): Win Pct at Previous job if HC"><img src="img/cfb_sp_vs_Coach_PrevWinPct.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-numeric"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-prev-winpct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Win Pct at Previous job if HC
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-numeric" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-coach-sp-before" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-coach-sp-before-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_Coach_sp_rel_before.png" class="lightbox" data-gallery="fig-append-numeric" title="Figure&nbsp;5&nbsp;(c): Coach SP+ Rel before hire"><img src="img/cfb_sp_vs_Coach_sp_rel_before.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-numeric"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-coach-sp-before-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Coach <em>SP+ Rel</em> before hire
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-numeric" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-games-hc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-games-hc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_numb_gamesAsHC.png" class="lightbox" data-gallery="fig-append-numeric" title="Figure&nbsp;5&nbsp;(d): Numb. of games as HC"><img src="img/cfb_sp_vs_numb_gamesAsHC.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-numeric"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-games-hc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) Numb. of games as HC
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-append-numeric" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-team-winpct-recent" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-team-winpct-recent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/cfb_sp_vs_TeamWinPctRecent.png" class="lightbox" data-gallery="fig-append-numeric" title="Figure&nbsp;5&nbsp;(e): Team Win Pct in last 5 years"><img src="img/cfb_sp_vs_TeamWinPctRecent.png" class="img-fluid figure-img" style="width:40.0%" data-ref-parent="fig-append-numeric"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-team-winpct-recent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(e) Team Win Pct in last 5 years
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-append-numeric-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5
+</figcaption>
+</figure>
+</div>
+<p>Additional plots comparing numeric predictors and <em>SP+ Rel</em></p>
+<div id="tbl-truth" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-truth-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Truth Table for <em>SP+ Rel</em>.
+</figcaption>
+<div aria-describedby="tbl-truth-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Actual: <em>SP+ Rel</em> &lt; 0</th>
+<th style="text-align: right;">Actual: <em>SP+ Rel</em> &gt; 0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Predicted SP+ Rel &lt; 0</strong></td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Predicted SP+ Rel &gt; 0</strong></td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">22</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-intro_sp" class="csl-entry" role="listitem">
+Connelly, Bill. 2017. <em>Explaining <span>S&amp;P+</span>, College Football’s Deepest Advanced Analytics System</em>. <a href="https://www.sbnation.com/college-football/2017/10/13/16457830/college-football-advanced-stats-analytics-rankings" class="uri">Https://www.sbnation.com/college-football/2017/10/13/16457830/college-football-advanced-stats-analytics-rankings</a>.
+</div>
+<div id="ref-sp_2025" class="csl-entry" role="listitem">
+Connelly, Bill. 2025. <em>2025 College Football <span>SP+</span> Rankings for All 136 FBS Teams</em>. <a href="https://www.espn.com/college-football/story/_/id/46128861/2025-college-football-sp+-rankings-all-136-fbs-teams" class="uri">Https://www.espn.com/college-football/story/_/id/46128861/2025-college-football-sp+-rankings-all-136-fbs-teams</a>.
+</div>
+<div id="ref-highest_state" class="csl-entry" role="listitem">
+Evans, David. 2023. <em>Complete List of the Highest-Paid State Employees: College Coaches Dominate Top Earning Public Sector Workers</em>. <a href="https://thesportsdaily.org/news/complete-list-of-the-highest-paid-state-employees-college-coaches-dominate-top-earning-public-sector-workers/" class="uri">Https://thesportsdaily.org/news/complete-list-of-the-highest-paid-state-employees-college-coaches-dominate-top-earning-public-sector-workers/</a>.
+</div>
+<div id="ref-glmnet" class="csl-entry" role="listitem">
+Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. 2010. <span>“Regularization Paths for Generalized Linear Models via Coordinate Descent.”</span> <em>Journal of Statistical Software</em> 33 (1): 1–22. <a href="https://doi.org/10.18637/jss.v033.i01">https://doi.org/10.18637/jss.v033.i01</a>.
+</div>
+<div id="ref-cfbfastr" class="csl-entry" role="listitem">
+Gilani, Saiem, Akshay Easwaran, Jared Lee, and Eric Hess. 2021. <em>cfbfastR: The SportsDataverse’s r Package for College Football Data.</em> <a href="https://cfbfastR.sportsdataverse.org/">https://cfbfastR.sportsdataverse.org/</a>.
+</div>
+<div id="ref-cnbc_college_worth" class="csl-entry" role="listitem">
+Ozanian, Michael. 2024. <em>What the Top 75 College Sports Programs Are Worth</em>. <a href="https://www.cnbc.com/2024/12/19/college-sports-programs-valuations.html" class="uri">Https://www.cnbc.com/2024/12/19/college-sports-programs-valuations.html</a>.
+</div>
+<div id="ref-alumni_538" class="csl-entry" role="listitem">
+Planos, Josh. 2019. <em>It Doesn’t Hurt to Hire Alumni as Head Coaches. But It Doesn’t Help, Either.</em> <a href="https://fivethirtyeight.com/features/it-doesnt-hurt-to-hire-alumni-as-head-coaches-but-it-doesnt-help-either/" class="uri">Https://fivethirtyeight.com/features/it-doesnt-hurt-to-hire-alumni-as-head-coaches-but-it-doesnt-help-either/</a>.
+</div>
+<div id="ref-intro_srs" class="csl-entry" role="listitem">
+Radjewski, Bill. 2020. <em>Talking Tech: Creating a Simple Rating System</em>. <a href="https://blog.collegefootballdata.com/talking-tech-bu/" class="uri">Https://blog.collegefootballdata.com/talking-tech-bu/</a>.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
