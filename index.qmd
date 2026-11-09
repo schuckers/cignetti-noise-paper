@@ -298,6 +298,8 @@ Thanks to the team of folks who put together `cfbfastr` for making their data av
 ![Promoted from Within](img/cfb_sp_vs_PromoteWithin.png){#fig-promote-within width=40%}
 
 Additional plots of categorical predictors vs *SP+ Rel*
+:::
+
 
 ::: {#fig-append-cat2 layout-ncol=2}
 ![Has NFL coaching experience](img/cfb_sp_vs_PrevNFLCoaching.png){#fig-nfl-exp width=40%}
