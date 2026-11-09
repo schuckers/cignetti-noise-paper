@@ -1,8 +1,10 @@
+<!--
 ---
 title: "CFB_coach_Data_Prep"
 format: html
 editor: visual
 ---
+-->
 
 ### Loading necessary libraries
 
@@ -77,10 +79,13 @@ coach_bio_df<-read.csv("https://webpages.charlotte.edu/mschuck1/sports/data/Coac
 The data frame created below has historical data on each coaches season for the years 1976 to 2025.
 
 ```{r}
-coach_hist_df<-cfbd_coaches() %>% filter(year>1949) %>%
-  mutate(name=paste0(first_name," ",last_name)) %>%
-  select(-c(first_name,last_name))
+#coach_hist_df<-cfbd_coaches() %>% filter(year>1949) %>%
+#  mutate(name=paste0(first_name," ",last_name)) %>%
+#  select(-c(first_name,last_name))
 
+#write.csv(coach_hist_df,"coach_hist_df.csv")
+
+coach_hist_df = read.csv("data/coach_hist_df.csv")
 
 #RR <- cfbd_coaches() %>% filter(year>1949) %>%
 #  mutate(name=paste0(first_name," ",last_name)) %>%
