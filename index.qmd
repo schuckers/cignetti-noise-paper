@@ -11,17 +11,7 @@ keywords:
   -predictive modelling
   -machine learning
   -coaching
-abstract: 
-  Using data on 117 recent Power 4 college football hires, we built a statistical model for predicting a coach’s success at their new school. 
-  For each hire, we collected data about their background and experiences, the previous success as a head coach or coordinator and their success since hiring. 
-  Over 50 variables on these factors were recorded though we used 29 of these in building our predictive model. 
-  Our measure of success is based upon Bill Connelly’s SP+ team ratings relative to the performance on the same metric of the school 
-  in the 15 years prior to their selection as head coach. 
-  Using a cross-validated regularized linear regression, we obtain a predictive model for coaching success. 
-  Among the important factors for predicting a successful hire are having been a previous college head coach, leaving a job as an Offensive Coordinator, age and quality of the hiring school's team in the previous 15 years. 
-  While we do find these factors are important for the prediction of a successful coaching hire, the trends here are weak. 
-  With 66% accuracy, the model does identify coaching hires that will outperform team performance in the 15 years before the hire. 
-  However, no combination of these factors leads to high predictability of identifying a successful coaching hire. 
+abstract:   Using data on 117 recent Power 4 college football hires, we built a statistical model for predicting a coach’s success at their new school.   For each hire, we collected data about their background and experiences, the previous success as a head coach or coordinator and their success since hiring.   Over 50 variables on these factors were recorded though we used 29 of these in building our predictive model.   Our measure of success is based upon Bill Connelly’s SP+ team ratings relative to the performance on the same metric of the school   in the 15 years prior to their selection as head coach.   Using a cross-validated regularized linear regression, we obtain a predictive model for coaching success.   Among the important factors for predicting a successful hire are having been a previous college head coach, leaving a job as an Offensive Coordinator, age and quality of the hiring school's team in the previous 15 years.   While we do find these factors are important for the prediction of a successful coaching hire, the trends here are weak.   With 66% accuracy, the model does identify coaching hires that will outperform team performance in the 15 years before the hire.   However, no combination of these factors leads to high predictability of identifying a successful coaching hire. 
 ---
 
 ```{r echo=FALSE}
@@ -96,7 +86,9 @@ To account for regression to the mean, a team that was underperforming relative 
 ![Prior Connection to School](img/cfb_sp_vs_Connection.png){#fig-connection width=40%} 
 ![Previously won Conf. Champ. as HC](img/cfb_sp_vs_PrevCCasHC.png){#fig-prev-cc width=40%} 
 ![Previously won Natl. Champ. as Coordinator](img/cfb_sp_vs_PrevNCasCoord.png){#fig-prev-nc width=40%} 
-![Previous Job with P4 School](img/cfb_sp_vs_LeavingP4.png){#fig-p4 width=40%} ![Previous Job with NFL](img/cfb_sp_vs_LeavingNFL.png){#fig-nfl width=40%}
+![Previous Job with P4 School](img/cfb_sp_vs_LeavingP4.png){#fig-p4 width=40%} 
+![Previous Job with NFL](img/cfb_sp_vs_LeavingNFL.png){#fig-nfl width=40%}
+
 ![Previous Job as OC](img/cfb_sp_vs_LastOC.png){#fig-oc width=40%} 
 ![Previously been HC any level college](img/cfb_sp_vs_PrevHCAny.png){#fig-hc-any width=40%} 
 
@@ -216,8 +208,9 @@ top_bottom=bind_rows(top_coaches,bottom_coaches)
 
 kable(top_bottom,col.names = c("Rank","Coach","School", "SP+ Rel", "SP+ Rel Z", "Seasons as Coach"),  caption = "Top 10 and Bottom 10 Coaching Performances")
 ```
-
-{#tbl-topcoaches-pred}
+:::
+{#tbl-topcoaches}
+:::
 
 The model we have explains about $15\%$ of the variability in the team's performance with a newly hired coach and the average difference between our model's prediction and the actual *SP+ Rel* of the coaches in these data is just over $7.5$ points. That is a large amount of variability and it speaks to the noisiness of these data. However, the model does well given that noisiness at predicting who will have a *SP+ Rel* above or below zero achieving `{r} accuracy_lasso`% accuracy on this metric.
 
@@ -305,7 +298,6 @@ Thanks to the team of folks who put together `cfbfastr` for making their data av
 ![Promoted from Within](img/cfb_sp_vs_PromoteWithin.png){#fig-promote-within width=40%}
 
 Additional plots of categorical predictors vs *SP+ Rel*
-:::
 
 ::: {#fig-append-cat2 layout-ncol=2}
 ![Has NFL coaching experience](img/cfb_sp_vs_PrevNFLCoaching.png){#fig-nfl-exp width=40%}
@@ -317,10 +309,9 @@ Additional plots of categorical predictors vs *SP+ Rel*
 ![Hired within same conference](img/cfb_sp_vs_SameConf.png){#fig-same-conf width=40%}
 
 ![Been Recruiting Coordinator previously](img/cfb_sp_vs_PrevRecruitCoord.png){#fig-recruit-coord width=40%}
-
-Additional plots of categorical predictors vs *SP+ Rel*
 :::
 
+Additional plots of categorical predictors vs *SP+ Rel*
 ::: {#fig-append-numeric layout-ncol=2}
 ![All Past Win Pct as HC](img/cfb_sp_vs_AllPastWinPctAsHC.png){#fig-all-winpct width=40%}
 
@@ -331,9 +322,11 @@ Additional plots of categorical predictors vs *SP+ Rel*
 ![Numb. of games as HC](img/cfb_sp_vs_numb_gamesAsHC.png){#fig-games-hc width=40%}
 
 ![Team Win Pct in last 5 years](img/cfb_sp_vs_TeamWinPctRecent.png){#fig-team-winpct-recent width=40%}
+:::
+
 
 Additional plots comparing numeric predictors and *SP+ Rel*
-:::
+
 | | Actual: *SP+ Rel* < 0 | Actual: *SP+ Rel* > 0 |
 |:---|---:|---:|
 | **Predicted SP+ Rel < 0** | `{r} truth_table[1,1]` | `{r} truth_table[1,2]` |
