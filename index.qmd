@@ -17,6 +17,7 @@ abstract:   Using data on 117 recent Power 4 college football hires, we built a 
 ```{r echo=FALSE}
 library(stringr)
 library(english)
+library(tidyverse)
 
 num_to_word <- function(x) {
   str_to_title(as.character(english(x)))
@@ -51,13 +52,12 @@ However, it is clear that our model's predictions are far from certain and that 
 In the rest of this paper we look at past hiring of college football head coaches to build a predictive model of the characteristics and factors that influence their success. 
 The next Section introduces the data that we collected through both automated and manual means. 
 Summaries of the variables we used as predictors are given in Section 3. 
-We describe our model building process and results in Section 4. 
-Finally, we conclude with a discussion of our results.
+We describe our model building process and results in Section 4. Finally we conclude with a discussion of our results.  
 
-# Data
+# Data 
 
-The data set used for this analysis is a collection of Power 4 plus Notre Dame (P4) coaching hires.  
-The P4 conferences are the Atlantic Coast Conference (ACC), Big 12, Big Ten and Southeastern Conference (SEC). 
+The data set used for this analysis is a collection of Power 4 plus the University of Notre Dame (IN) coaching hires.
+We will refer to this group as P4 schools.  The P4 conferences are the Atlantic Coast Conference (ACC), Big 12, Big Ten and Southeastern Conference (SEC). 
 We began with all coaching hires who started coaching during the 2016 season or since. 
 We added at least once coach from each school so that Kirk Ferentz is in our data. That gave us  hires.
 
@@ -87,7 +87,7 @@ To account for regression to the mean, a team that was underperforming relative 
 ![Previously won Conf. Champ. as HC](img/cfb_sp_vs_PrevCCasHC.png){#fig-prev-cc width=40%} 
 ![Previously won Natl. Champ. as Coordinator](img/cfb_sp_vs_PrevNCasCoord.png){#fig-prev-nc width=40%} 
 ![Previous Job with P4 School](img/cfb_sp_vs_LeavingP4.png){#fig-p4 width=40%} 
-![Previous Job with NFL](img/cfb_sp_vs_LeavingNFL.png){#fig-nfl width=40%}
+![Previous Job with NFL](img/cfb_sp_vs_LeavingNFL.png){#fig-nfl width=40%} 
 
 ![Previous Job as OC](img/cfb_sp_vs_LastOC.png){#fig-oc width=40%} 
 ![Previously been HC any level college](img/cfb_sp_vs_PrevHCAny.png){#fig-hc-any width=40%} 
@@ -105,6 +105,7 @@ The historical values for win percentage, SRS and SP+ were obtained using the *c
 
 
 ```{r echo=FALSE}
+#| label: tbl-top-bottom
 top_coaches=coach_all_df %>%
   arrange(desc(sp_rel_team)) %>%
   mutate(Rank=1:nrow(coach_all_df)) %>%
@@ -136,7 +137,7 @@ Using the R package *cfbfastr*, we obtained historical team data including wins 
 
 
 Among these `{r} nrow(coach_all_df)` college football head coaching hires in our data, there were `{r} sum(coach_all_df$PreviousHC)` who left a job as head coach (HC) at another school, and `{r} sum(coach_bio_df$PrevHCAnyLevel[coach_bio_df$first_season<2025])` of our hires had been a HC at some level previous to their being hired. 
-`{r} num_to_word(sum(coach_bio_df$PreviousDC[coach_bio_df$first_season<2025]))` of the hired coaches had been Defensive Coordinators (DCs) and `{r eval=FALSE} sum(coach_bio_df$PreviousOC[coach_bio_df$first_season<2025])` were Offensive Coordinators (OCs). 
+`{r} num_to_word(sum(coach_bio_df$PreviousDC[coach_bio_df$first_season<2025]))` of the hired coaches had been Defensive Coordinators (DCs) and `{r} sum(coach_bio_df$PreviousOC[coach_bio_df$first_season<2025])` were Offensive Coordinators (OCs). 
 The other previous positions included four position coaches, an offensive analyst, four Associate or Assistant HCs and one hire who was not employed in football. 
 While more coaches were hired directly from DC positions, `{r} sum(coach_bio_df$SideOfBall[coach_bio_df$first_season<2025]=="D")` of the `{r} nrow(coach_bio_df[coach_bio_df$first_season<2025,])` hires (`{r} round(sum(coach_bio_df$SideOfBall[coach_bio_df$first_season<2025]=="D")/nrow(coach_bio_df[coach_bio_df$first_season<2025,]),2)*100`%) had defense as their background. 
 Seventy-three (`{r} sum(coach_bio_df$PrevHCAnyLevel[coach_bio_df$first_season<2025])` of the hires had been a head coach at the college or NFL previously, while `{r} sum(coach_bio_df$NFLCoachingExperience[coach_bio_df$first_season<2025])` had previously coached in the NFL. 
@@ -149,6 +150,7 @@ The majority of hired coaches, `{r} nrow(coach_bio_df[coach_bio_df$first_season<
 Below when we refer to recent metrics we will be talking about a five year period and when we refer to previous metrics we will be talking about a 15 year period.
 
 ::: {#fig-numeric1 layout-ncol=2}
+
 ![Numb. years as Coord or HC](img/cfb_sp_vs_numb_yrs_Coord_HC_quad.png){#fig-yrs-coord width=30%} 
 ![Age - 50](img/cfb_sp_vs_Age.png){#fig-age width=30%} 
 ![Teams SP+ in last 5 years](img/cfb_sp_vs_TeamSPRecent.png){#fig-sp-recent width=30%} 
@@ -183,35 +185,6 @@ The last term in our prediction equation involves a team's average *SP+ Rel* ove
 
 The hires with the ten highest and ten lowest predicted *SP+ Rel* are listed in @tbl-topcoaches-pred. We can see that the model suggests that the hire with the highest predicted success was Rhett Lashlee at SMU. Eight of the ten top predicted *SP+ Rel* values had positive observed values. Tony Elliott at Virginia and Jedd Fisch at Arizona were the exceptions. Elliott has improved his Virginia teams and, if he stays, may yet get to positive territory. Fisch left Arizona after a successful second season. Among the coaches predicted to have negative *SP+ Rel*, eight of the ten are in or have finished in negative territory. The exceptions are Dan Mullen whose team performance dropped significantly over his four years at Florida and Kirby Smart who has impressively elevated Georgia to new heights. Seven of these ten coaches have already been fired with only Smart, Fickell and Venables still employed at these schools. Venables' Oklahoma 2025 team had one of their best recent seasons with him as a HC and so there is hope for a turnaround there. Looking at the bottom ten schools, most of the schools there are considered to be 'elite' or nearly so. The model predicts that succeeding at these schools is hard partly because they are already at the upper tail of the distribution. Overall the model accurately predicts whether a coach will have a positive or negative *SP+ Rel* 67% of the time.
 
-
-
-```{r echo=FALSE}
-top_coaches=coach_all_df %>%
-  arrange(desc(sp_rel_team)) %>%
-  mutate(Rank=1:nrow(coach_all_df)) %>%
-  select (Rank,name,school,sp_rel_team, sp_rel_team_z,numb_seasons) %>%
-  slice(1:10) %>%
-  mutate(sp_rel_team=round(sp_rel_team,1)) %>%
-  mutate(sp_rel_team_z=round(sp_rel_team_z,2)) 
-
-bottom_coaches=coach_all_df %>%
-  arrange(sp_rel_team) %>%
-   mutate(Rank=nrow(coach_all_df):1) %>%
-  select (Rank,name,school,sp_rel_team, sp_rel_team_z,numb_seasons) %>%
-  slice(1:10) %>%
-  mutate(sp_rel_team=round(sp_rel_team,1)) %>%
-  mutate(sp_rel_team_z=round(sp_rel_team_z,2)) %>%
-  arrange(Rank)
-
-top_bottom=bind_rows(top_coaches,bottom_coaches)
-
-
-kable(top_bottom,col.names = c("Rank","Coach","School", "SP+ Rel", "SP+ Rel Z", "Seasons as Coach"),  caption = "Top 10 and Bottom 10 Coaching Performances")
-```
-:::
-{#tbl-topcoaches}
-:::
-
 The model we have explains about $15\%$ of the variability in the team's performance with a newly hired coach and the average difference between our model's prediction and the actual *SP+ Rel* of the coaches in these data is just over $7.5$ points. That is a large amount of variability and it speaks to the noisiness of these data. However, the model does well given that noisiness at predicting who will have a *SP+ Rel* above or below zero achieving `{r} accuracy_lasso`% accuracy on this metric.
 
 While it is important to focus on the factors that do influence hiring success, it is worth mentioning those that do **not** given the factors that **are** in the model. Having a previous connection to the school, being a previous head coach at any level, having NFL coaching experience, having experience as a recruiting coordinator, having played football in the NFL or at a P4 school seem to have no impact on our ability to predict how well a coach will do. Winning a national championship as a HC at any level as well as being a Coordinator for a team that won a national championship or a conference championship does not predict coaching success. Similarly having regional ties to the hiring school does not seem to be impactful and the same is true for moving within the same conference or leaving a P4 school. A coach’s relative SP+ as a previous HC is also not predictive, as is their previous win percentage. One possible explanation is that we are taking averages of previous coaching performance that misses changes in SP+ over a coach's time with a previous school, e.g. Matt Rhule at Temple and Lance Leipold at Buffalo. Finally, the number of games coached as an HC before being hired is unimportant as a predictor as is the recent winning percentage of the team.
@@ -234,20 +207,6 @@ Thanks to the team of folks who put together `cfbfastr` for making their data av
 
 # Appendix
 
-| Name | Hiring School | *SP+ Rel* |
-|:---|:---|---:|
-| Troy Taylor | Stanford | -22.3 |
-| Willie Taggart | Florida State | -19.1 |
-| Geoff Collins | Georgia Tech | -18.5 |
-| Chad Morris | Arkansas | -18.0 |
-| Luke Fickell | Wisconsin | -15.0 |
-| Karl Dorrell | Colorado | -14.2 |
-| Jeff Hafley | Boston College | -12.6 |
-| Brent Pry | Virginia Tech | -11.8 |
-| Ryan Walters | Purdue | -11.7 |
-| Mel Tucker | Michigan State | -11.5 |
-
-: Worst Performing Coaching Hires by *SP+ Rel*. {#tbl-bottomcoaches}
 
 | Variable Name | Variable Meaning |
 |:---|:---|
@@ -285,45 +244,45 @@ Thanks to the team of folks who put together `cfbfastr` for making their data av
 : List of variables used as predictors in this paper. All values are relative to the coach at the time they were hired. {#tbl-var}
 
 ::: {#fig-append-cat layout-ncol=2}
-![Previous job as DC](img/cfb_sp_vs_LastDC.png){#fig-last-dc width=40%}
+![Previous job as DC](img/cfb_sp_vs_LastDC.png){#fig-last-dc width=40%} 
 
-![Previous job as HC](img/cfb_sp_vs_PreviousHC.png){#fig-prev-hc width=40%}
+![Previous job as HC](img/cfb_sp_vs_PreviousHC.png){#fig-prev-hc width=40%} 
 
-![Played P4 football](img/cfb_sp_vs_PlayedP4.png){#fig-played-p4 width=40%}
+![Played P4 football](img/cfb_sp_vs_PlayedP4.png){#fig-played-p4 width=40%} 
 
-![Played in the NFL](img/cfb_sp_vs_PlayedNFL.png){#fig-played-nfl width=40%}
+![Played in the NFL](img/cfb_sp_vs_PlayedNFL.png){#fig-played-nfl width=40%} 
 
-![Side of the Ball](img/cfb_sp_vs_SideOfBall.png){#fig-side-ball width=40%}
+![Side of the Ball](img/cfb_sp_vs_SideOfBall.png){#fig-side-ball width=40%} 
 
-![Promoted from Within](img/cfb_sp_vs_PromoteWithin.png){#fig-promote-within width=40%}
+![Promoted from Within](img/cfb_sp_vs_PromoteWithin.png){#fig-promote-within width=40%} 
 
 Additional plots of categorical predictors vs *SP+ Rel*
 :::
 
 
 ::: {#fig-append-cat2 layout-ncol=2}
-![Has NFL coaching experience](img/cfb_sp_vs_PrevNFLCoaching.png){#fig-nfl-exp width=40%}
+![Has NFL coaching experience](img/cfb_sp_vs_PrevNFLCoaching.png){#fig-nfl-exp width=40%} 
 
-![Won Natl. Champ. as HC any level](img/cfb_sp_vs_WonNCasHCAny.png){#fig-nc-hc width=40%}
+![Won Natl. Champ. as HC any level](img/cfb_sp_vs_WonNCasHCAny.png){#fig-nc-hc width=40%} 
 
-![Won Conf. Champ. as Coord any level](img/cfb_sp_vs_WonCCasCoordAny.png){#fig-cc-coord width=40%}
+![Won Conf. Champ. as Coord any level](img/cfb_sp_vs_WonCCasCoordAny.png){#fig-cc-coord width=40%} 
 
-![Hired within same conference](img/cfb_sp_vs_SameConf.png){#fig-same-conf width=40%}
-
-![Been Recruiting Coordinator previously](img/cfb_sp_vs_PrevRecruitCoord.png){#fig-recruit-coord width=40%}
+![Hired within same conference](img/cfb_sp_vs_SameConf.png){#fig-same-conf width=40%} 
+ 
+![Been Recruiting Coordinator previously](img/cfb_sp_vs_PrevRecruitCoord.png){#fig-recruit-coord width=40%} 
 :::
 
 Additional plots of categorical predictors vs *SP+ Rel*
 ::: {#fig-append-numeric layout-ncol=2}
-![All Past Win Pct as HC](img/cfb_sp_vs_AllPastWinPctAsHC.png){#fig-all-winpct width=40%}
+![All Past Win Pct as HC](img/cfb_sp_vs_AllPastWinPctAsHC.png){#fig-all-winpct width=40%} 
 
-![Win Pct at Previous job if HC](img/cfb_sp_vs_Coach_PrevWinPct.png){#fig-prev-winpct width=40%}
+![Win Pct at Previous job if HC](img/cfb_sp_vs_Coach_PrevWinPct.png){#fig-prev-winpct width=40%} 
 
-![Coach *SP+ Rel* before hire](img/cfb_sp_vs_Coach_sp_rel_before.png){#fig-coach-sp-before width=40%}
+![Coach *SP+ Rel* before hire](img/cfb_sp_vs_Coach_sp_rel_before.png){#fig-coach-sp-before width=40%} 
 
-![Numb. of games as HC](img/cfb_sp_vs_numb_gamesAsHC.png){#fig-games-hc width=40%}
+![Numb. of games as HC](img/cfb_sp_vs_numb_gamesAsHC.png){#fig-games-hc width=40%} 
 
-![Team Win Pct in last 5 years](img/cfb_sp_vs_TeamWinPctRecent.png){#fig-team-winpct-recent width=40%}
+![Team Win Pct in last 5 years](img/cfb_sp_vs_TeamWinPctRecent.png){#fig-team-winpct-recent width=40%} 
 :::
 
 
