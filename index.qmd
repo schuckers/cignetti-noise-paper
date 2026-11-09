@@ -82,13 +82,11 @@ To account for regression to the mean, a team that was underperforming relative 
 
 ::: {#fig-cat1 layout-ncol=2}
 ![Regional Ties](img/cfb_sp_vs_RegionalTies.png){#fig-reg-ties width=40%} 
-
 ![Prior Connection to School](img/cfb_sp_vs_Connection.png){#fig-connection width=40%} 
 ![Previously won Conf. Champ. as HC](img/cfb_sp_vs_PrevCCasHC.png){#fig-prev-cc width=40%} 
 ![Previously won Natl. Champ. as Coordinator](img/cfb_sp_vs_PrevNCasCoord.png){#fig-prev-nc width=40%} 
 ![Previous Job with P4 School](img/cfb_sp_vs_LeavingP4.png){#fig-p4 width=40%} 
 ![Previous Job with NFL](img/cfb_sp_vs_LeavingNFL.png){#fig-nfl width=40%} 
-
 ![Previous Job as OC](img/cfb_sp_vs_LastOC.png){#fig-oc width=40%} 
 ![Previously been HC any level college](img/cfb_sp_vs_PrevHCAny.png){#fig-hc-any width=40%} 
 
@@ -150,7 +148,6 @@ The majority of hired coaches, `{r} nrow(coach_bio_df[coach_bio_df$first_season<
 Below when we refer to recent metrics we will be talking about a five year period and when we refer to previous metrics we will be talking about a 15 year period.
 
 ::: {#fig-numeric1 layout-ncol=2}
-
 ![Numb. years as Coord or HC](img/cfb_sp_vs_numb_yrs_Coord_HC_quad.png){#fig-yrs-coord width=30%} 
 ![Age - 50](img/cfb_sp_vs_Age.png){#fig-age width=30%} 
 ![Teams SP+ in last 5 years](img/cfb_sp_vs_TeamSPRecent.png){#fig-sp-recent width=30%} 
@@ -183,7 +180,7 @@ Having been hired from an OC position is associated with about a $2.37$ point in
 While if a hire was previously a college football HC, the predicted decrease in their team's performance is fourth-tenths a point. 
 The last term in our prediction equation involves a team's average *SP+ Rel* over the previous 15 years and that is negatively associated with how a coaching hire's teams will perform. We can interpret the value here of $-0.34$ as the expected decrease in a team's average performance for every additional point of *SP+ Rel* that the hiring team had over the previous 15 years. This is a regressive effect, since SP+ for an average team should be around zero, then for a new coaching hire, good teams we would expect them to get worse and very good teams we would expect them to get much worse, while for below average teams we would expect them to get better just by making the hire. One possible explanation for this is a regression to the mean as team performance tends to move to the average of all teams, which for SP+ is around zero. Another explanation is college football has moved to an era of more parity and relative coaching performance is not immune to moving with that trend.
 
-The hires with the ten highest and ten lowest predicted *SP+ Rel* are listed in @tbl-topcoaches-pred. We can see that the model suggests that the hire with the highest predicted success was Rhett Lashlee at SMU. Eight of the ten top predicted *SP+ Rel* values had positive observed values. Tony Elliott at Virginia and Jedd Fisch at Arizona were the exceptions. Elliott has improved his Virginia teams and, if he stays, may yet get to positive territory. Fisch left Arizona after a successful second season. Among the coaches predicted to have negative *SP+ Rel*, eight of the ten are in or have finished in negative territory. The exceptions are Dan Mullen whose team performance dropped significantly over his four years at Florida and Kirby Smart who has impressively elevated Georgia to new heights. Seven of these ten coaches have already been fired with only Smart, Fickell and Venables still employed at these schools. Venables' Oklahoma 2025 team had one of their best recent seasons with him as a HC and so there is hope for a turnaround there. Looking at the bottom ten schools, most of the schools there are considered to be 'elite' or nearly so. The model predicts that succeeding at these schools is hard partly because they are already at the upper tail of the distribution. Overall the model accurately predicts whether a coach will have a positive or negative *SP+ Rel* 67% of the time.
+The hires with the ten highest and ten lowest predicted *SP+ Rel* are listed in @tbl-top-bottom. We can see that the model suggests that the hire with the highest predicted success was Rhett Lashlee at SMU. Eight of the ten top predicted *SP+ Rel* values had positive observed values. Tony Elliott at Virginia and Jedd Fisch at Arizona were the exceptions. Elliott has improved his Virginia teams and, if he stays, may yet get to positive territory. Fisch left Arizona after a successful second season. Among the coaches predicted to have negative *SP+ Rel*, eight of the ten are in or have finished in negative territory. The exceptions are Dan Mullen whose team performance dropped significantly over his four years at Florida and Kirby Smart who has impressively elevated Georgia to new heights. Seven of these ten coaches have already been fired with only Smart, Fickell and Venables still employed at these schools. Venables' Oklahoma 2025 team had one of their best recent seasons with him as a HC and so there is hope for a turnaround there. Looking at the bottom ten schools, most of the schools there are considered to be 'elite' or nearly so. The model predicts that succeeding at these schools is hard partly because they are already at the upper tail of the distribution. Overall the model accurately predicts whether a coach will have a positive or negative *SP+ Rel* 67% of the time.
 
 The model we have explains about $15\%$ of the variability in the team's performance with a newly hired coach and the average difference between our model's prediction and the actual *SP+ Rel* of the coaches in these data is just over $7.5$ points. That is a large amount of variability and it speaks to the noisiness of these data. However, the model does well given that noisiness at predicting who will have a *SP+ Rel* above or below zero achieving `{r} accuracy_lasso`% accuracy on this metric.
 
@@ -273,6 +270,7 @@ Additional plots of categorical predictors vs *SP+ Rel*
 :::
 
 Additional plots of categorical predictors vs *SP+ Rel*
+
 ::: {#fig-append-numeric layout-ncol=2}
 ![All Past Win Pct as HC](img/cfb_sp_vs_AllPastWinPctAsHC.png){#fig-all-winpct width=40%} 
 
