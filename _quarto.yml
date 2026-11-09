@@ -1,6 +1,8 @@
 project:
   type: manuscript
-
+  render:
+    - index.qmd
+    
 execute:
   freeze: auto
 
