@@ -83,9 +83,9 @@ The data frame created below has historical data on each coaches season for the 
 #  mutate(name=paste0(first_name," ",last_name)) %>%
 #  select(-c(first_name,last_name))
 
-#write.csv(coach_hist_df,"coach_hist_df.csv")
+#write.csv(coach_hist_df,"coach_hist_df.csv", row.names= FALSE )
 
-coach_hist_df = read.csv("data/coach_hist_df.csv")
+coach_hist_df = read.csv("https://webpages.charlotte.edu/mschuck1/sports/data/coach_hist_df.csv")
 
 #RR <- cfbd_coaches() %>% filter(year>1949) %>%
 #  mutate(name=paste0(first_name," ",last_name)) %>%
