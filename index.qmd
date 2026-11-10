@@ -1,6 +1,6 @@
 ---
 title: "The Cignetti and The Noise: A Model for Predicitng Power 4 College Football Coaching Hire Success"
-author: "Anonymous Author"
+author: "Anonymous Author" 
 date: last-modified
 number-sections: true
 bibliography: sports.bib
@@ -45,16 +45,12 @@ The changes due to the use of player's name, image and license (NIL) that allow 
 A December 2024 study by CNBC using fiscal year 2023 numbers estimated that the top university athletic programs are valued at over $1 billion US dollars and have annual revenue of over $200 million [@cnbc_college_worth]. 
 Unsurprisingly the executive that leads the college football operation, the head coach, are well compensated. In a 2023 study, David Evans found that "80% of the Highest-Earning Public Employees are College Head Coaches" [@highest_state].
 
-Being a successful college football head coach requires multifaceted talent in a variety of areas including player development, staff management, in gameday decision making, in player evaluation and in recruitment of players. 
-Consequently, the selection of a new coach for top universities is an important one.  This paper proposes two novel contributions.  
-First, we propose methodology for evaluating coaching hires by comparing coaching success
-to previous performance at a given institution.  
+Being a successful college football head coach requires multifaceted talent in a variety of areas including player development, staff management, in gameday decision making, in player evaluation and in recruitment of players.  Consequently, the selection of a new coach for top universities is an important one.  This paper proposes two novel contributions.  First, we propose methodology for evaluating coaching hires by comparing coaching success to previous performance at a given institution.  
 Using those performance measures we build a model to predict which coaching hires will be successful using hand collected data about each coach's background, experiences, and previous success as a coach.
-We then develop a machine learning predictive model which finds that there are a few factors that discernibly predict a coaching hire's future performance. 
+Second, we develop a machine learning predictive model which finds that there are a few factors that discernibly predict a coaching hire's future performance. 
 However, it is clear that our model's predictions are far from certain and that there is a great deal of noise relative to the signals in the data about who would make a successful coach.
 
-In the rest of this paper we look at past hiring of college football head coaches to build a predictive model of the characteristics and factors that influence their success. 
-The next Section introduces the data that we collected through both automated and manual means. 
+In the rest of this paper we describe our measure for coaching success and then we look at past hiring of college football head coaches to build a predictive model of the characteristics and factors that influence their success. The next Section introduces the data that we collected through both automated and manual means. 
 Summaries of the variables we used as predictors are given in Section 3. 
 We describe our model building process and results in Section 4. Finally we conclude with a discussion of our results.  
 
@@ -99,7 +95,7 @@ To account for regression to the mean, a team that was underperforming relative 
 
 ![Previous Job as OC](img/cfb_sp_vs_LastOC.png){#fig-oc width=60%} 
 
-![Previously been HC any level college](img/cfb_sp_vs_PrevHCAny.png){#fig-hc-any width=60%}  
+![Previously been HC any level college](img/cfb_sp_vs_PrevHCAny.png){#fig-hc-any width=60%} 
 
 Plots for selected categorical predictors vs SP Rel +
 :::
@@ -186,7 +182,8 @@ Our final prediction equation is:
 
 \begin{align}
 \widehat{SP+ Rel} =& 0.88 -0.42 \text{ Was College HC before at any level} + \\
-&2.37 \text{ Previous job was as an OC} - 0.34 \text{ Hiring School's Team SP+ Rel in 15 years before hiring} \nonumber
+&2.37 \text{ Previous job was as an OC} + \\
+&-0.34 \text{ Hiring School's Team SP+ Rel in 15 years before hiring} \nonumber
 \end{align} {#eq-predictioneq}
 
 The largest factors in our model were whether or not the coach's previous job was as an OC (`PreviousOC`), whether they had ever been a college coach previously (`prevCollegeHC`) and the team's performance over the last 15 years (`team_sp_prev`). 
@@ -243,7 +240,7 @@ Thanks to the team who put together `cfbfastr` for making their data available i
 | `numb_years_Coord_adj` | Number of years as OC/DC/AHC/HC above average of 11.8 years |
 | `numb_years_Coord_HCadj2` | Numbers of years as OC/DC/AHC/HC different from 11.8 squared |
 | `PromoteWithin` | Coach was promoted to HC from other position at same school |
-| 'NumberPriorStops' | Number of different teams coach worked for before being hired |
+| `NumberPriorStops` | Number of different teams coach worked for before being hired |
 | `AllPriorWinPct` | Win Percent as Coach at all levels before being hired |
 | `winpct_prev_Rel` | Win percent as HC at previous job |
 | `team_sp_prev` | Hiring school's SP+ in 15 years before hire |
@@ -276,14 +273,16 @@ Additional plots of categorical predictors vs *SP+ Rel*
 
 ![Won Natl. Champ. as HC any level](img/cfb_sp_vs_WonNCasHCAny.png){#fig-nc-hc width=60%} 
 
-![Won Conf. Champ. as Coord any level](img/cfb_sp_vs_WonCCasCoordAny.png){#fig-cc-coord width=60%} 
+![Won Conf. Champ. as Coord any level](img/cfb_sp_vs_WonCCasCoordAny.png){#fig-cc-coord width=60%}  
 
 ![Hired within same conference](img/cfb_sp_vs_SameConf.png){#fig-same-conf width=60%} 
  
 ![Been Recruiting Coordinator previously](img/cfb_sp_vs_PrevRecruitCoord.png){#fig-recruit-coord width=60%} 
-:::
 
 Additional plots of categorical predictors vs *SP+ Rel*
+:::
+
+
 
 ::: {#fig-append-numeric layout-ncol=2}
 ![All Past Win Pct as HC](img/cfb_sp_vs_AllPastWinPctAsHC.png){#fig-all-winpct width=60%} 
@@ -295,14 +294,16 @@ Additional plots of categorical predictors vs *SP+ Rel*
 ![Numb. of games as HC](img/cfb_sp_vs_numb_gamesAsHC.png){#fig-games-hc width=60%} 
 
 ![Team Win Pct in last 5 years](img/cfb_sp_vs_TeamWinPctRecent.png){#fig-team-winpct-recent width=60%} 
+
+Additional plots comparing numeric predictors and *SP+ Rel*
 :::
 
 
-Additional plots comparing numeric predictors and *SP+ Rel*
+
 
 | | Actual: *SP+ Rel* < 0 | Actual: *SP+ Rel* > 0 |
 |:---|---:|---:|
-| **Predicted SP+ Rel < 0** | `{r} truth_table[1,1]` | `{r} truth_table[1,2]` |
-| **Predicted SP+ Rel > 0** | `{r} truth_table[2,1]` | `{r} truth_table[2,2]` |
+| **$\widehat{SP+ Rel}$ < 0** | `{r} truth_table[1,1]` | `{r} truth_table[1,2]` |
+| **$\widehat{Predicted SP+ Rel}$ > 0** | `{r} truth_table[2,1]` | `{r} truth_table[2,2]` |
 : Truth Table for *SP+ Rel*. {#tbl-truth}
 
