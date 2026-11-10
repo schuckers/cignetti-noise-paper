@@ -246,25 +246,26 @@ talent in a variety of areas including player development, staff
 management, in gameday decision making, in player evaluation and in
 recruitment of players. Consequently, the selection of a new coach for
 top universities is an important one. This paper proposes two novel
-contributions.\\
-First, we propose methodology for evaluating coaching hires by comparing
-coaching success to previous performance at a given institution.\\
+contributions. First, we propose methodology for evaluating coaching
+hires by comparing coaching success to previous performance at a given
+institution.\\
 Using those performance measures we build a model to predict which
 coaching hires will be successful using hand collected data about each
-coach's background, experiences, and previous success as a coach. We
-then develop a machine learning predictive model which finds that there
-are a few factors that discernibly predict a coaching hire's future
-performance. However, it is clear that our model's predictions are far
-from certain and that there is a great deal of noise relative to the
-signals in the data about who would make a successful coach.
+coach's background, experiences, and previous success as a coach.
+Second, we develop a machine learning predictive model which finds that
+there are a few factors that discernibly predict a coaching hire's
+future performance. However, it is clear that our model's predictions
+are far from certain and that there is a great deal of noise relative to
+the signals in the data about who would make a successful coach.
 
-In the rest of this paper we look at past hiring of college football
-head coaches to build a predictive model of the characteristics and
-factors that influence their success. The next Section introduces the
-data that we collected through both automated and manual means.
-Summaries of the variables we used as predictors are given in Section 3.
-We describe our model building process and results in Section 4. Finally
-we conclude with a discussion of our results.
+In the rest of this paper we describe our measure for coaching success
+and then we look at past hiring of college football head coaches to
+build a predictive model of the characteristics and factors that
+influence their success. The next Section introduces the data that we
+collected through both automated and manual means. Summaries of the
+variables we used as predictors are given in Section 3. We describe our
+model building process and results in Section 4. Finally we conclude
+with a discussion of our results.
 
 Data
 
@@ -315,7 +316,98 @@ before the hired coach arrived.
 
 \begin{minipage}[t]{0.50\linewidth}
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio,alt={Regional Ties}]{img/cfb_sp_vs_RegionalTies.png}
+\centering{
+
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_RegionalTies.png}
+
+}
+
+\subcaption{\label{fig-reg-ties}Regional Ties}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.50\linewidth}
+
+\centering{
+
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_Connection.png}
+
+}
+
+\subcaption{\label{fig-connection}Prior Connection to School}
+
+\end{minipage}%
+\newline
+\begin{minipage}[t]{0.50\linewidth}
+
+\centering{
+
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PrevCCasHC.png}
+
+}
+
+\subcaption{\label{fig-prev-cc}Previously won Conf. Champ. as HC}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.50\linewidth}
+
+\centering{
+
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PrevNCasCoord.png}
+
+}
+
+\subcaption{\label{fig-prev-nc}Previously won Natl. Champ. as
+Coordinator}
+
+\end{minipage}%
+\newline
+\begin{minipage}[t]{0.50\linewidth}
+
+\centering{
+
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_LeavingP4.png}
+
+}
+
+\subcaption{\label{fig-p4}Previous Job with P4 School}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.50\linewidth}
+
+\centering{
+
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_LeavingNFL.png}
+
+}
+
+\subcaption{\label{fig-nfl}Previous Job with NFL}
+
+\end{minipage}%
+\newline
+\begin{minipage}[t]{0.50\linewidth}
+
+\centering{
+
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_LastOC.png}
+
+}
+
+\subcaption{\label{fig-oc}Previous Job as OC}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.50\linewidth}
+
+\centering{
+
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PrevHCAny.png}
+
+}
+
+\subcaption{\label{fig-hc-any}Previously been HC any level college}
 
 \end{minipage}%
 
@@ -453,7 +545,49 @@ about a 15 year period.
 
 \begin{minipage}[t]{0.50\linewidth}
 
-\includegraphics[width=0.3\linewidth,height=\textheight,keepaspectratio,alt={Numb. years as Coord or HC}]{img/cfb_sp_vs_numb_yrs_Coord_HC_quad.png}
+\centering{
+
+\includegraphics[width=0.5\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_numb_yrs_Coord_HC_quad.png}
+
+}
+
+\subcaption{\label{fig-yrs-coord}Numb. years as Coord or HC}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.50\linewidth}
+
+\centering{
+
+\includegraphics[width=0.5\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_Age.png}
+
+}
+
+\subcaption{\label{fig-age}Age - 50}
+
+\end{minipage}%
+\newline
+\begin{minipage}[t]{0.50\linewidth}
+
+\centering{
+
+\includegraphics[width=0.5\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_TeamSPRecent.png}
+
+}
+
+\subcaption{\label{fig-sp-recent}Teams SP+ in last 5 years}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.50\linewidth}
+
+\centering{
+
+\includegraphics[width=0.5\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_TeamSP_Prev15.png}
+
+}
+
+\subcaption{\label{fig-sp-prev15}Teams SP+ in last 15 years}
 
 \end{minipage}%
 
@@ -469,11 +603,11 @@ Turning to the graphics, we see a sampling of these relationship in
 Figure~\ref{fig-cat1}. In that figure, we can see that medians (red
 lines) seem to indicate there are some differences between the
 categories for winning a national championship as a coordinator,
-\textbf{?@fig-prev-nc}, and for previous job was as an OC,
-\textbf{?@fig-oc}. Otherwise the other variables do not seem to suggest
-there is much difference in the typical coaching performance for the
-different characteristics recorded in those subfigures. More graphics
-like these can be found for the other categorical predictors in
+Figure~\ref{fig-prev-nc}, and for previous job was as an OC,
+Figure~\ref{fig-oc}. Otherwise the other variables do not seem to
+suggest there is much difference in the typical coaching performance for
+the different characteristics recorded in those subfigures. More
+graphics like these can be found for the other categorical predictors in
 Figure~\ref{fig-append-cat} and Figure~\ref{fig-append-cat2}. In those
 graphics, Figure~\ref{fig-append-cat} (d) suggests that having played in
 the NFL yields a higher median \emph{SP+ Rel} as does having previously
@@ -483,18 +617,18 @@ have the value that is associated with the higher median.
 
 Turning to numeric predictors, we can see the relationship between
 \emph{SP+ Rel} and four of these predictors in
-Figure~\ref{fig-numeric1}. In \textbf{?@fig-yrs-coord}, we can see that
-there is not a relationship between number of years as a HC or
+Figure~\ref{fig-numeric1}. In Figure~\ref{fig-yrs-coord}, we can see
+that there is not a relationship between number of years as a HC or
 Coordinator before being hired. The three remaining subfigures,
-\textbf{?@fig-age}, \textbf{?@fig-sp-recent}, \textbf{?@fig-sp-prev15},
-also show negative linear relationships between \emph{SP+ Rel} and
-coach's age, teams performance in the recent past, 5 years, and team
-performance in the previous 15 years. More figures like this can be
-found in Figure~\ref{fig-append-numeric} of the Appendix at the end of
-this report. Noteworthy among those figures in the Appendix is that
-there seems to be a positive linear relationship between a hired coach's
-\emph{SP+ Rel} and their previous \emph{SP+ Rel} had they been a college
-HC previously.
+Figure~\ref{fig-age}, Figure~\ref{fig-sp-recent},
+Figure~\ref{fig-sp-prev15}, also show negative linear relationships
+between \emph{SP+ Rel} and coach's age, teams performance in the recent
+past, 5 years, and team performance in the previous 15 years. More
+figures like this can be found in Figure~\ref{fig-append-numeric} of the
+Appendix at the end of this report. Noteworthy among those figures in
+the Appendix is that there seems to be a positive linear relationship
+between a hired coach's \emph{SP+ Rel} and their previous \emph{SP+ Rel}
+had they been a college HC previously.
 
 Model and Results
 
@@ -522,9 +656,11 @@ coach was previously an HC in all of the models we considered.
 
 Our final prediction equation is:
 
-\[\hspace{-4in} SP+ Rel = 0.88 -0.42 \text{ Was College HC before at any level} + \]
-\[2.37 \text{ Previous job was as an OC} - 0.34 \text{ Hiring School's Team SP+ Rel in 15 years before hiring}\]
-\{\#eq-predictioneq\}
+\begin{align}
+\widehat{SP+ Rel} =& 0.88 -0.42 \text{ Was College HC before at any level} + \\
+&2.37 \text{ Previous job was as an OC} + \\
+&-0.34 \text{ Hiring School's Team SP+ Rel in 15 years before hiring} \nonumber
+\end{align} \{\#eq-predictioneq\}
 
 The largest factors in our model were whether or not the coach's
 previous job was as an OC (\texttt{PreviousOC}), whether they had ever
@@ -654,12 +790,11 @@ to find and many schools find themselves having difficulty
 distinguishing the Cignetti's from the noise.
 
 The code and the data for the analyses presented here can be found at
-\url{https://github.com/schuckers/cfb_coach_analytics}.
+\url{https://github.com/schuckers/cignetti-noise-paper}.
 
-Thanks to the team of folks who put together \texttt{cfbfastr} for
-making their data available in a usable and regularly updated manner and
-to Brian Macdonald (Yale) for thoughtful discussions about this
-analysis.
+Thanks to the team who put together \texttt{cfbfastr} for making their
+data available in a usable and regularly updated manner and to Brian
+Macdonald (Yale) for thoughtful discussions about this analysis.
 
 Appendix
 
@@ -723,8 +858,8 @@ average of 11.8 years \\
 different from 11.8 squared \\
 \texttt{PromoteWithin} & Coach was promoted to HC from other position at
 same school \\
-`NumberPriorStops' & Number of different teams coach worked for before
-being hired \\
+\texttt{NumberPriorStops} & Number of different teams coach worked for
+before being hired \\
 \texttt{AllPriorWinPct} & Win Percent as Coach at all levels before
 being hired \\
 \texttt{winpct\_prev\_Rel} & Win percent as HC at previous job \\
@@ -743,7 +878,7 @@ last 5 years \\
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_LastDC.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_LastDC.png}
 
 }
 
@@ -755,7 +890,7 @@ last 5 years \\
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PreviousHC.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PreviousHC.png}
 
 }
 
@@ -767,7 +902,7 @@ last 5 years \\
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PlayedP4.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PlayedP4.png}
 
 }
 
@@ -779,7 +914,7 @@ last 5 years \\
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PlayedNFL.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PlayedNFL.png}
 
 }
 
@@ -791,7 +926,7 @@ last 5 years \\
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_SideOfBall.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_SideOfBall.png}
 
 }
 
@@ -803,7 +938,7 @@ last 5 years \\
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PromoteWithin.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PromoteWithin.png}
 
 }
 
@@ -822,7 +957,7 @@ predictors vs \emph{SP+ Rel}}
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PrevNFLCoaching.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PrevNFLCoaching.png}
 
 }
 
@@ -834,7 +969,7 @@ predictors vs \emph{SP+ Rel}}
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_WonNCasHCAny.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_WonNCasHCAny.png}
 
 }
 
@@ -846,7 +981,7 @@ predictors vs \emph{SP+ Rel}}
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_WonCCasCoordAny.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_WonCCasCoordAny.png}
 
 }
 
@@ -858,7 +993,7 @@ predictors vs \emph{SP+ Rel}}
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_SameConf.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_SameConf.png}
 
 }
 
@@ -870,7 +1005,7 @@ predictors vs \emph{SP+ Rel}}
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PrevRecruitCoord.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_PrevRecruitCoord.png}
 
 }
 
@@ -879,9 +1014,10 @@ previously}
 
 \end{minipage}%
 
-\end{figure}%
+\caption{\label{fig-append-cat2}Additional plots of categorical
+predictors vs \emph{SP+ Rel}}
 
-Additional plots of categorical predictors vs \emph{SP+ Rel}
+\end{figure}%
 
 \begin{figure}
 
@@ -889,7 +1025,7 @@ Additional plots of categorical predictors vs \emph{SP+ Rel}
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_AllPastWinPctAsHC.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_AllPastWinPctAsHC.png}
 
 }
 
@@ -901,7 +1037,7 @@ Additional plots of categorical predictors vs \emph{SP+ Rel}
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_Coach_PrevWinPct.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_Coach_PrevWinPct.png}
 
 }
 
@@ -913,7 +1049,7 @@ Additional plots of categorical predictors vs \emph{SP+ Rel}
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_Coach_sp_rel_before.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_Coach_sp_rel_before.png}
 
 }
 
@@ -925,7 +1061,7 @@ Additional plots of categorical predictors vs \emph{SP+ Rel}
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_numb_gamesAsHC.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_numb_gamesAsHC.png}
 
 }
 
@@ -937,7 +1073,7 @@ Additional plots of categorical predictors vs \emph{SP+ Rel}
 
 \centering{
 
-\includegraphics[width=0.4\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_TeamWinPctRecent.png}
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{img/cfb_sp_vs_TeamWinPctRecent.png}
 
 }
 
@@ -945,9 +1081,10 @@ Additional plots of categorical predictors vs \emph{SP+ Rel}
 
 \end{minipage}%
 
-\end{figure}%
+\caption{\label{fig-append-numeric}Additional plots comparing numeric
+predictors and \emph{SP+ Rel}}
 
-Additional plots comparing numeric predictors and \emph{SP+ Rel}
+\end{figure}%
 
 \begin{longtable}[]{@{}lrr@{}}
 \caption{Truth Table for \emph{SP+
@@ -964,8 +1101,8 @@ Rel}.}\label{tbl-truth}\tabularnewline
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-\textbf{Predicted SP+ Rel \textless{} 0} & 57 & 25 \\
-\textbf{Predicted SP+ Rel \textgreater{} 0} & 13 & 22 \\
+\textbf{\(\widehat{SP+ Rel}\) \textless{} 0} & 57 & 25 \\
+\textbf{\(\widehat{Predicted SP+ Rel}\) \textgreater{} 0} & 13 & 22 \\
 \end{longtable}
 
 
